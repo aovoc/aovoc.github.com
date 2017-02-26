@@ -12,14 +12,14 @@ redcarpet:
 # Themes are encouraged to use these universal variables
 # so be sure to set them if your theme uses them.
 #
-title : dolymood的博客
+title : 陈民钦的博客
 tagline:
 author :
-  name : dolymood
-  email : dolymood@gmail.com
-  github : dolymood
-  twitter : dolymood
-  feedburner : aijc
+  name : 陈民钦
+  email : minqinch@gmail.com
+  github : aovoc
+  twitter : aovoc
+  feedburner : aovoc
 
 # The production_url is only used when full-domain names are needed
 # such as sitemap.txt
@@ -29,7 +29,7 @@ author :
 # Else if you are pushing to username.github.io, replace with your username.
 # Finally if you are pushing to a GitHub project page, include the project name at the end.
 #
-production_url : http://blog.aijc.net
+production_url : http://aovoc.github.io
 
 paginate: 10
 
@@ -99,9 +99,9 @@ JB :
   #    width: 580
   #    colorscheme: light
   comments :
-    provider : duoshuo
+    provider : minqin
     duoshuo :
-      short_name : dolymood
+      short_name : aovoc
 
   # Settings for analytics helper
   # Set 'provider' to the analytics provider you want to use.

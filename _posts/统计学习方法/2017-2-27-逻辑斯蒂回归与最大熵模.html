@@ -1,0 +1,333 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>2017-2-27-逻辑斯蒂回归与最大熵模</title>
+<!-- 2017-02-27 周一 04:01 -->
+<meta  charset="utf-8">
+<meta  name="generator" content="Org-mode">
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="orgstyle.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">2017-2-27-逻辑斯蒂回归与最大熵模</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. 逻辑斯蒂回归</a>
+<ul>
+<li><a href="#sec-1-1">1.1. 逻辑斯蒂分布</a></li>
+<li><a href="#sec-1-2">1.2. 二项逻辑斯蒂回归模型</a></li>
+<li><a href="#sec-1-3">1.3. 模型参数估计</a></li>
+<li><a href="#sec-1-4">1.4. 多项logistic regression</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. 最大熵模型</a>
+<ul>
+<li><a href="#sec-2-1">2.1. 最大熵原理</a></li>
+<li><a href="#sec-2-2">2.2. 最大熵模型的定义</a></li>
+<li><a href="#sec-2-3">2.3. 最大熵模型的学习</a></li>
+<li><a href="#sec-2-4">2.4. 极大似然估计</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3. 模型学习的最优化算法</a>
+<ul>
+<li><a href="#sec-3-1">3.1. 改进的迭代尺度法(IIS)</a></li>
+<li><a href="#sec-3-2">3.2. 拟牛顿法</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+逻辑斯蒂回归与最大熵模型都属于对数线性模型
+</p>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 逻辑斯蒂回归</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> 逻辑斯蒂分布</h3>
+</div>
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> 二项逻辑斯蒂回归模型</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+定义：
+<img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_63a8cd3f76856d47c08ce58207e8bceb413f5087.png" alt="$$ P(y = 1| x) = \frac {exp(\vec w \cdot \vec x + b)} {1 + exp( \vec 
+w \cdot \vec x + b)}$$">
+<img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_582e4589d2d379775170e7aa343d456989af8bd7.png" alt="$$P(y=0|x) = \frac {1} {1 + exp(\vec w \cdot \vec x + b)}$$">
+比较两个条件概率的大小，将实例x分到条件概率值较大的那一类。
+对数几率或logit函数是：
+<img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_5e9ff12c59e480f78ec354f6ef068f65a2ba39e5.png" alt="$$logit(p) = log \frac {p}{1-p}$$">
+在logistic regression模型中，输出 Y=1 的对数几率是输入x的线性函数
+<img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_e0935b11453070bd70d05d3886c36ffbf77b890c.png" alt="$$logit(P(Y=1|x)) = \vec w \cdot \vec x$$">
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> 模型参数估计</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+应用极大似然估计法估计模型的参数
+设: <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_2535e24fb9d0397e4021da4aa1ace0bbd06c4388.png" alt="$P(Y=1|x) = \pi(x), P(Y=0|x) = 1 - \pi(x)$">
+似然函数为：
+<img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_3c1b78599d9d1f241469acb62601f1b4be125004.png" alt="$$ \prod_{i=1}^N[\pi(x_i)]^{y_i}[1-\pi(x_i)]^{1-y_i}$$">
+对数似然函数为：
+<img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_b3f4a59cfdb4846e7414e4bae532b8e2bfb3ad19.png" alt="$$L(\vec w) = \sum_{i=1}^{N}[y_i(\vec w \cdot \vec {x_i}) -log(1+exp(\vec w \cdot \vec {x_i}))]$$">
+对对数似然函数求极大值，得到 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_f49a09d6e5847a2d5aaaaad009c181209d663272.png" alt="$\vec w$"> 的估计值。
+问题变成以对数似然函数为目标函数的最优化问题。
+通常采用梯度下降法和拟牛顿法。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> 多项logistic regression</h3>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 最大熵模型</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+由最大熵推导实现
+</p>
+</div>
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> 最大熵原理</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+假设离散随机变量X的概率分布为P(X)，则其熵为：
+<img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_2e3cde0f87d5a1a961f020fe79cd6d95e3cb1869.png" alt="$$H(P)= - \sum_xP(x)logP(x)$$"> 
+熵最大的模型为最好的模型。
+最大熵原理通过熵的最大化来表示等可能性。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> 最大熵模型的定义</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+对于给定的输入X,以条件概率P(Y|X)输出Y。
+学习的目标:用最大熵原理选择最好的分类模型。
+最大熵模型
+  定义在条件概率分布P(Y|X)上的条件熵为：
+    <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_16aa1399688b5a5cf37793e1b5dcc487ff664ed7.png" alt="$$H(P) = -\sum_{x,y}P(x)P(y|x)log(y|x) $$"> 
+则满足所有约束条件的模型集合为C中条件熵H(P)最大的模型称为最大熵模型。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> 最大熵模型的学习</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+形式化为约束最优化问题，将约束最优化问题转换为无约束最优化的对偶问题，通过解对偶问题求解原问题。
+最大熵模型：
+<img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_131305828b55c18e30eefb856b1dc007f39b7d60.png" alt="$$P_w(y|x) = \frac{1}{Z_w(x)} exp(\sum_{i=1}^nw_if_i(x,y))$$">
+其中，
+<img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_8bd2e25b1d3859ab8cf24887eccdf365d720c95f.png" alt="$$Z_w(x) = \sum_yexp(\sum_{i=1}^nw_if_i(x,y))$$">
+特征函数为 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_2ad6f492ed32007d191c88145c6544e2e7252250.png" alt="$f_i(x,y)$"> ， <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_eed52a4961904f7fd51fdff8f5a1040e74cf6a0a.png" alt="$Z_{\vec w}(x)$"> 称为规范化因子， n为特征函数的个数， <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_bae1ec9a8ea6fc39f4cfc01682f3f87d3da01824.png" alt="$w_i$"> 为特征的权值。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> 极大似然估计</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+证明了最大熵模型学习中的对偶函数的极大化等价于最大熵模型的极大似然估计
+最大熵模型的一般形式
+  <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_7b5801941c79166ce717e55357af5c13fcb71633.png" alt="$$P_w(y|x) = \frac1{Z_w(x)}exp(\sum_{i=1}^n w_i f_i(x,y))$$">
+其中
+  <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_8d879e50293888db99ff540bba99d32f1b32ae28.png" alt="$$ Z_w(x) = \sum_yexp(\sum_{i=1}^nw_if_i(x,y)) $$">
+  这里 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_65fa73aa012ebdbcf8e5713edd194829cc5d95d4.png" alt="$\vec x\in R^n$"> 为输入， <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_92fb0e8e699808dfbfa95a8a124cd9cddc65e485.png" alt="$y\in{1,2,...,K}$"> 为输出， <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_4837025268f1afcb02a25ff27b7c96f67ce27b63.png" alt="$\vec w \in R^n$"> 为权值向量，<img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_abeffe67509a9b639c4e0be8f2a5320e92dfec99.png" alt="$f_i(x,y), i=1,2,...,n$"> 为任意实值特征函数。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 模型学习的最优化算法</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+logistic regression、最大熵模型学习归结为以似然函数为目标函数的最优化问题，通常通过迭代法求解。能保证找到全局最优解，牛顿法和拟牛顿法收敛速度快。
+</p>
+</div>
+
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 改进的迭代尺度法(IIS)</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+当前的参数向量是 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_6a3dc6544369a3bcc40dc2f19833c4da104c97a5.png" alt="$w$">,找到一个新的参数向量 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_b7185ac7daef0bf508a38c50df428119b05adbdc.png" alt="$w+\delta$">,使得模型的对数似然函数增大，重复这一过程，直至找到对数似然函数的最大值。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> 拟牛顿法</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+最大熵模型：
+<img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_1ff6583c49b081f897ff976eabdc23b191b7f0f0.png">
+目标函数（熵最大化）：
+<img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_dddaff6f75beb13981abe571b83e0896c7a113ad.png" alt="$$min_{\vec w \in R^n} f(\vec 
+w) = ... $$">
+梯度：
+<img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_e6c1a88e7839c6c2235508b3fa842a6612d30bcb.png" alt="$$g(\vec w) = (\frac {\partial f(\vec w)}{\partial w_1}, \frac {\partial f(\vec w)}{\partial w_2},...,\frac {\partial f(\vec w)}{\partial w_n})^T $$">
+</p>
+
+<p>
+算法：
+(1)选定初始点 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_d5cb0af938b937b1f5566aab816db3232efcd273.png" alt="$w^{(0)}$"> ,取 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_03768afd59b66406a6c6c6b4471141601ce92f50.png" alt="$B_0$"> 为正定对称矩阵，置k=0
+(2)计算 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_a3bc7cc8f49fe791e14748c1eafc75f34797e4db.png" alt="$g_k = g(w^{(k)})$"> , 若 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_b03f096187ae0893b1e09f090ea1bdde69e9d671.png" alt="$||g_k|| &amp;lt; \epsilon$"> ,则停止计算， 得 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_f659547a290ce6f18c550bc9faf39fd8b65cf4a1.png" alt="$w = w^{(k)}$"> ; 否则转到(3)
+(3)由 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_19593fceabc52e0dbdc3809fa27e7389cfe462e5.png" alt="$B_kp_k = -g_k$"> 求出 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_29aa6945c785d67f37d0f305a536a0c734a71d8f.png" alt="$p_k$"> 。
+(4)一维搜索：求 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_dd252e7887eaafc054a53653dfced6a680719907.png" alt="$\lambda_k$"> 使得
+<img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_4370875cc47b07c49f9cf7e37bd28b05b2977c40.png" alt="$$f(w^{(k)} + \lambda_kp_k) =
+\min_{\lambda \ge 0} f(w^{(k)} + \lambda p_k)$$">
+(5)置 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_7a178e177633ac986d53c57b54b847bb807cd610.png" alt="$$w^{(k+1)} = w^{(k)} + \lambda_kp_k $$">
+(6)计算 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_239a9b2f4afda38a0cb446dee91bca1f34f405b0.png" alt="$$g_{k+1} = g({w^(k+1)}) $$"> , 若 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_0e4808840190a88158e12ccba46747b55503847e.png" alt="$$||g_{k+1}|| &amp;lt; \epsilon$$"> , 则停止计算, 得 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_66808653780d3c91008fa1afc492fbea518c7462.png" alt="$$w = w^{(k+1)}$$"> ; 否则， 按下式求出 <img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_4806fe9c7ce8ad16115a308dd48ea7e7ac78c27e.png" alt="$$B_{k+1}$$"> :
+<img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_7cf7af119168d6ab21ae620791c36d10e267afdc.png" alt="$$B_{k+1} = B_k + \frac {y_ky_k^T}{y_k^T\lambda_k} - \frac{B_k\lambda_k\lambda_k^TB_k}{\lambda_k^TB_k\lambda_k
+}$$">
+其中，
+<img src="ltxpng/2017-2-27-逻辑斯蒂回归与最大熵模_f23e8926d23e18c35ad93437333e745a3951fc83.png" alt="$$y_k = g_{k+1} - g_k, \lambda_k = w^{(k+1)} - w^{(k)}$$">
+(7)置 k = k +1, 转(3).
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2017-02-27 周一 04:01</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

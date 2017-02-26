@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>2017-2-27-提升方法</title>
+<!-- 2017-02-27 周一 04:01 -->
+<meta  charset="utf-8">
+<meta  name="generator" content="Org-mode">
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="orgstyle.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">2017-2-27-提升方法</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. 提升方法AdaBoost算法</a>
+<ul>
+<li><a href="#sec-1-1">1.1. 提升方法的基本思路</a></li>
+<li><a href="#sec-1-2">1.2. Adaboost算法</a></li>
+<li><a href="#sec-1-3">1.3. Adaboost的例子</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. Adaboost算法的训练误差分析</a></li>
+<li><a href="#sec-3">3. Adaboost算法的解释</a>
+<ul>
+<li><a href="#sec-3-1">3.1. 前向分布算法</a></li>
+<li><a href="#sec-3-2">3.2. 前向分布算法与Adaboost</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4. 提升树</a>
+<ul>
+<li><a href="#sec-4-1">4.1. 提升树模型</a></li>
+<li><a href="#sec-4-2">4.2. 提升树算法</a></li>
+<li><a href="#sec-4-3">4.3. 梯度提升</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+在分类中，boosting 通过改变训练样本的权重，学习多个分类器，并将这些分类器进行线性组合，提高分类的性能。
+</p>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 提升方法AdaBoost算法</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> 提升方法的基本思路</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+PAC(probably approximately correct)概率近似正确
+强可学习和弱可学习等价
+将弱可学习算法提升为强可学习算法, adaboost
+提升方法从弱学习算法出发，反复学习，得到一系列弱分类器（基本分类器），然后组合弱分类器，构成一个强分类器。大多数的提升方法都是改变训练数据的概率分布，针对不同的数据分布学得不同的弱学类器。
+</p>
+
+<p>
+如何改变训练数据的权值和概率分布
+Adaboost:提高那些被前一轮弱分类器错误分类样本的权值，而降低那些被正确分类样本的权值。
+</p>
+
+<p>
+如何将弱分类器组合成一个强分类器
+Adaboost:加权多数表决，加大分类误差率小的弱分类器的权值，减小分类误差率大的权值。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Adaboost算法</h3>
+</div>
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Adaboost的例子</h3>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Adaboost算法的训练误差分析</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Adaboost的训练误差是以指数速率下降的。具有适应性，能适应弱分类器各自的训练误差率。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Adaboost算法的解释</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+另一种解释，模型为加法模型，损失函数为指数函数、学习算法为前向分布算法的二类分类学习方法。
+</p>
+</div>
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 前向分布算法</h3>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> 前向分布算法与Adaboost</h3>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 提升树</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+以分类树或者回归树为基本分类器的提升方法。
+</p>
+</div>
+<div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> 提升树模型</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+可以表示为决策树的加法模型：
+<img src="ltxpng/2017-2-27-提升方法_daef06ddf7b6244be3d46d392423fa6a25b394f1.png" alt="$$ f_M(x) = \sum_{m=1}^MT(x;\Theta) $$">
+其中，T表示决策树，<img src="ltxpng/2017-2-27-提升方法_03bd3a54bbdcf60e49f9949cd22bd226bdf5baa9.png" alt="$\Theta$"> 为决策树参数； M为树的个数。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> 提升树算法</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+ 采用前向分步算法。
+首先确定初始提升树 <img src="ltxpng/2017-2-27-提升方法_7c97c45c193db21c8969fb38fb94f4121a920020.png" alt="$f_0(x) = 0$">,第m步的模型是：
+<img src="ltxpng/2017-2-27-提升方法_f83dd101cfe68b4c1e5b640a0a16e74a5206cfd4.png" alt="$$ f_m(x) = f_{m-1}(x) + T(x; \Theta_m) $$">
+通过经验风险极小化确定下一棵决策树的参数 <img src="ltxpng/2017-2-27-提升方法_4fcea4482a65102dc3ba8f0f9d7a6e1fe69777ec.png" alt="$\Theta_m$">.
+树的线性组合能很好地拟合训练数据，提升树是一个高功能算法。
+不同的提升树算法，其区别是损失函数不同。
+回归问题：使用平方误差损失函数
+分类问题：使用指数损失函数
+一般决策问题：一般损失函数
+</p>
+
+<p>
+二类分类问题，将adaboost中的基本分类器限定为二类分类器，提升树是Adaboost的特殊情况。
+回归问题的提升树只需简单地拟合当前模型的残差。
+</p>
+
+<p>
+回归问题的提升树算法：
+输入：训练数据集 <img src="ltxpng/2017-2-27-提升方法_128025b790ff7c1086fdb30370ffaa7be9a66502.png" alt="$$T = {(x_1, y_1), (x_2, y_2),...,(x_N, y_N)} $$"> 
+输出：提升树 <img src="ltxpng/2017-2-27-提升方法_beb680f8038041bda614cbe3ea134dc9203cf68f.png" alt="$f_M(x)$"> 
+(1)初始化 <img src="ltxpng/2017-2-27-提升方法_61dde69b22793bc8b318df08143290e75f707333.png" alt="$$f_0(x) = 0$$">
+(2)对m=1,2,&#x2026;,M
+(a)计算残差
+<img src="ltxpng/2017-2-27-提升方法_3f5f070711d7b278b9fbba42538b3eca9c2ee508.png" alt="$$r_{mi} = y_i - f_{m-1}(x_i), i=1,2,...,N $$">
+(b)拟合残差$r<sub>mi</sub>$学习一个回归树，得到T
+(c)更新f<sub>m</sub>(x) = f<sub>m-1</sub>(x) + T
+(3)得到回归问题提升树
+<img src="ltxpng/2017-2-27-提升方法_42f381819dba550b14327a105e9f18cb2d411c79.png" alt="$$f_M(x) = \sum_{m=1}^MT $$">
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> 梯度提升</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+对一般损失函数，提升树的优化并不容易。梯度提升，利用最速下降法的近似方法，利用损失函数的负梯度在当前模型的值  <img src="ltxpng/2017-2-27-提升方法_a39129d4d5acfac9c68aa91b6932b4228dab6408.png" alt="$$-[\partial L(y,f(x_i)) / \partial f(x_i)]_{f(x) = f_{m-1}(x)}] $$">  作为回归问题提升树算法中残差的近似值，拟合一个回归树。
+</p>
+
+<p>
+算法步骤：
+(1)初始化：估计使损失函数极小化的常数值，是只有根结点的树。
+(2a)计算损失函数的负梯度在当前模型的值，将它作为残差的估计。
+(2b)估计回归树叶结点区域，以拟合残差的近似值。
+(2c)利用线性搜索估计叶节点区域的值，使损失函数极小化。
+(2d)更新回归树
+(3)得到最终模型
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2017-02-27 周一 04:01</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

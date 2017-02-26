@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>2017-2-27-决策树</title>
+<!-- 2017-02-27 周一 04:02 -->
+<meta  charset="utf-8">
+<meta  name="generator" content="Org-mode">
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="orgstyle.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">2017-2-27-决策树</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. 决策树模型与学习</a>
+<ul>
+<li><a href="#sec-1-1">1.1. 决策树模型</a></li>
+<li><a href="#sec-1-2">1.2. 决策树与if-then规则</a></li>
+<li><a href="#sec-1-3">1.3. 决策树与条件概率分布</a></li>
+<li><a href="#sec-1-4">1.4. 决策树学习</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. 特征选择</a>
+<ul>
+<li><a href="#sec-2-1">2.1. 特征选择问题</a></li>
+<li><a href="#sec-2-2">2.2. 信息增益</a></li>
+<li><a href="#sec-2-3">2.3. 信息增益比</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3. 决策树的生成</a>
+<ul>
+<li><a href="#sec-3-1">3.1. ID3算法</a></li>
+<li><a href="#sec-3-2">3.2. C4.5的生成算法</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4. 决策树的剪枝</a></li>
+<li><a href="#sec-5">5. CART算法</a>
+<ul>
+<li><a href="#sec-5-1">5.1. CART的生成</a></li>
+<li><a href="#sec-5-2">5.2. CART剪枝</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+呈树形，基于特征对实例进行分类的过程。可以认为是if-then 规则的集合，或者在类空间和概率空间的条件概率分布。
+通常包含3个步骤：特征选择、决策树的生成、决策树的修剪。
+</p>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 决策树模型与学习</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> 决策树模型</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+决策树由结点和有向边组成。
+结点：内部结点、叶结点
+内部结点表示一个特征或属性，叶结点表示一个类。
+将实例分到叶结点的类中。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> 决策树与if-then规则</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+if-then规则的一个重要的性质：互斥并且完备
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> 决策树与条件概率分布</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+决策树还可以表示给定特征条件下类的条件概率分布。
+决策树所表示的条件概率分布由各个单元给定条件下类的条件概率分布组成。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> 决策树学习</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+本质：归纳出一组分类规则。
+由训练数据集归纳出条件概率模型，得到的模型应该对未知数据有较好的预测。
+决策树学习的损失函数：对数似然损失
+策略：以损失函数为目标函数的最小化
+启发式学习方法 次最优
+递归地选择最优特征，对训练数据进行分割
+过拟合 剪枝 泛化能力
+学习算法包含：特征选择、决策树的生成、决策树的剪枝
+常用算法:ID3、C4.5、CART
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 特征选择</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> 特征选择问题</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+特征选择的准则：信息增益和信息增益比。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> 信息增益</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+熵：随机变量不确定性的度量
+设X是一个取有限个值的离散随机变量，其概率分布为：
+<img src="ltxpng/2017-2-27-决策树_ccbbe17affdc12f50592274bfe6da090318fc82c.png" alt="$$P(X = x_i) = p_i,  i= 1, 2, ..., n$$">
+则随机变量X的熵定义为：
+<img src="ltxpng/2017-2-27-决策树_f867c2e1eac70b5f597bafe92476a33ae481ab70.png" alt="$$ H(X) = -\sum_{i=1}^n{p_ilogp_i} $$">
+熵只依赖于X的分布，而与X的取值无关，可将X的熵记为H(p)
+熵越大，随机变量的不确定性越大
+</p>
+
+<p>
+条件熵H(Y|X)表示在已知随机变量X的条件下随机变量Y的不确定性。
+</p>
+
+<p>
+当熵和条件熵中的概率由数据估计得到时，所对应的熵和条件熵分别称为经验熵和经验条件熵。
+</p>
+
+<p>
+信息增益表示得知特征X的信息而得到类Y的不确定性减少的程度。
+定义为集合D的经验熵H(D)与特征A给定的条件下D的经验条件熵H(D|A)之差(互信息)：
+  <img src="ltxpng/2017-2-27-决策树_eab0ed5a1107a3fd5c58a1355db56e214fb4b3d2.png" alt="$$ g(D, A) = H(D) - H(D|A) $$">
+决策树学习应用信息增益准则来选取特征，表示在特征A给定的条件下对数据集D进行分类的不确定性。
+特征选择方法：计算各特征的信息增益，选择信息增益最大的特征。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> 信息增益比</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+以信息增益作为划分训练数据集的特征，存在偏向于选择取值较多的特征的问题，使用信息增益比进行校正。
+信息增益比 <img src="ltxpng/2017-2-27-决策树_1541118d68f25343ba7c06153c179943a60f1ac6.png" alt="$g_R(D,A)$"> 定义为信息增益 <img src="ltxpng/2017-2-27-决策树_8d5493082d6795196d60df4bb539b70bad7bfdcd.png" alt="$g(D,A)$"> 与训练数据集关于特征A的值的熵 <img src="ltxpng/2017-2-27-决策树_4beb0856aa614474825b088b930473333fa8aa83.png" alt="$H_A(D)$"> 之比。其中， <img src="ltxpng/2017-2-27-决策树_6ea44a9eb25272d5073626ff4b2392efdd838d58.png" alt="$H_A(D) = - \sum_{i=1}^n \frac{|D_i|}{|D|}log_2 \frac{|D_i|}{|D|}$"> 。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 决策树的生成</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> ID3算法</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+核心：在决策树各个结点上应用信息增益准则选取特征，递归得构建决策树。
+ID3相当于用极大似然法进行概率模型的选择。
+只有树的生成，容易产生过拟合。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> C4.5的生成算法</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+对ID3进行改进，用信息增益比选择特征。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 决策树的剪枝</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+通过极小化决策树整体的损失函数或代价函数来实现。
+决策树的损失函数可以定义为：
+  <img src="ltxpng/2017-2-27-决策树_ac9dbe852d1f4f31e0313132d536c00f1d0e1323.png" alt="$$ C_\alpha(T) = \sum_{t=1}^{|T|}N_tH_t(T) +  \alpha|T| $$">
+其中经验熵：
+  <img src="ltxpng/2017-2-27-决策树_619232df329e40668b2506e56935fd81a84180a9.png" alt="$$H_t(T) = - \sum_k(\frac {N_{tk}} {N_t})log( \frac{N_{tk}} {N_t})$$">
+  <img src="ltxpng/2017-2-27-决策树_9af4ed07ffb2f9bb657b4eaa1c560cde259f941a.png" alt="$N_t$"> : 叶结点有 <img src="ltxpng/2017-2-27-决策树_9af4ed07ffb2f9bb657b4eaa1c560cde259f941a.png" alt="$N_t$"> 个样本点。
+树T的叶结点个数为|T|
+损失函数的极小化等价于正则化的极大似然估计
+</p>
+
+<p>
+树的剪枝算法
+  递归地从叶结点向上回缩，若损失函数减小，则进行剪枝。
+  计算可在局部进行，可由动态规划算法实现。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> CART算法</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+CART 分类与回归树
+CART:在给定输入随机变量X条件下输出随机变量Y的条件概率分布的学习方法。
+包含两个步骤：决策树的生成、决策树剪枝
+</p>
+</div>
+
+<div id="outline-container-sec-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> CART的生成</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+回归树：平方误差最小化
+分类树：基尼系数最小化
+</p>
+
+<p>
+回归树的生成
+假设将输入空间划分为M个单元，每个单元上有一个固定的输出值<img src="ltxpng/2017-2-27-决策树_cfa6e9b7b5e7cbd646d67e36c4bbe05841a1e932.png" alt="$c_m$">,于是回归模型可表示为：
+<img src="ltxpng/2017-2-27-决策树_3ad47e16bed4df62b3e45462202b547d8227122e.png" alt="$$ f(x) = \sum_{m=1}^Mc_mI(x\in
+ R_m)$$">
+当输入空间划分确定时，可以用平方误差 <img src="ltxpng/2017-2-27-决策树_2457bf47c2e6ecceb7b4ddb387bb04e1351f37d6.png" alt="$\sum_{x_i \in R_m}(y_i - f(x_i))^2$"> 来表示回归树对于训练数据的预测误差，用平方误差最小原则求解每个单元的最优输出值。
+单元 <img src="ltxpng/2017-2-27-决策树_c89bd25fd9a4c9412390e4832d4e337017d5fd0f.png" alt="$R_m$"> 上的 <img src="ltxpng/2017-2-27-决策树_cfa6e9b7b5e7cbd646d67e36c4bbe05841a1e932.png" alt="$c_m$"> 的最优值 <img src="ltxpng/2017-2-27-决策树_6377e4cb589b5e280a939afc7815cb3b3223435e.png" alt="$\hat c_m$"> 是 <img src="ltxpng/2017-2-27-决策树_c89bd25fd9a4c9412390e4832d4e337017d5fd0f.png" alt="$R_m$"> 上的所有输入实例 <img src="ltxpng/2017-2-27-决策树_90c48580899af19274f24d5f9e2b4a356f6264be.png" alt="$x_i$"> 输出的均值。
+<img src="ltxpng/2017-2-27-决策树_575f1ede2d77d3798e08af391f179e2012ffa2d3.png" alt="$$ \hat c_m = ave(y_i | x_i \in R_m)  $$">
+对输入空间进行划分，启发式：
+选择第j个变量 <img src="ltxpng/2017-2-27-决策树_65c6976470fbb728bd7cb5103d35c876898ef23f.png" alt="$x^{(j)}$"> 和它取的值s,作为切分变量和切分点，寻找最优的切分变量和切分点，将输入空间划分为两个区域，对每个子区域重复上述过程，直至满足条件。
+</p>
+
+<p>
+分类树的生成
+定义基尼指数：
+<img src="ltxpng/2017-2-27-决策树_238d93b11188bc6e409477ecb5fa228641b119b6.png" alt="$$ Gini(p) = \sum_{k=1}^K p_k(1-p_k) = 1-\sum p_k^2 $$">
+对于给定的样本集合D,其基尼指数为
+<img src="ltxpng/2017-2-27-决策树_d2d569740d6fb957f40204efafc87b98f5a7552b.png" alt="$$Gini(D) = 1- \sum_{k=1}^K(|C_k|/|D|)^2 $$">
+<img src="ltxpng/2017-2-27-决策树_472e5206db20381d77609119c50484c795e633f7.png" alt="$C_k$"> 是D中属于第k类的样本子集， K是类的个数。
+若样本集合根据特征A是否取a被划分为 <img src="ltxpng/2017-2-27-决策树_5200a7dd671226d41ff8e5cb2ad12f090137f498.png" alt="$D_1$"> 和 <img src="ltxpng/2017-2-27-决策树_5ee7f3b38fb84b4ea0fa6849fc637a060ed0643e.png" alt="$D_2$"> ，则在特征条件A下，集合D的基尼指数定义为：
+<img src="ltxpng/2017-2-27-决策树_1214202d72e4b884fb4a2966d6bdcebbd045277e.png" alt="$$ Gini(D, A) =\frac{|D_1|}{|D|} Gini(D_1) + \frac{|D_2|}{ |D|}Gini(D_2) $$">
+基尼指数表示集合的不确定性，基尼指数越大，集合的不确定性越大。
+基尼指数和熵之半的曲线很接近，都可以近似地代表分类的误差率。
+</p>
+
+<p>
+CART生成算法
+对所有特征的每个取值计算基尼指数，选择基尼指数最小的特征及其所对应的切分点作为最优特征和最优切分点，将训练数据分为两个子结点中。重复直至满足条件。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-5-2" class="outline-3">
+<h3 id="sec-5-2"><span class="section-number-3">5.2</span> CART剪枝</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+从完全生长的决策树底端剪去一些子树。
+由两步组成:
+  从底端开始不断剪枝，直到根结点，形成子树序列；
+  通过交叉验证法在独立的验证集上对子序列进行测试，从中选取最优子树。
+</p>
+
+<p>
+1.剪枝，形成一个子树序列
+  <img src="ltxpng/2017-2-27-决策树_aa1d18a66d6c296f0ca3f8a4e4bfd3c731a06c95.png" alt="$$ C_\alpha(T) = C(T) + \alpha|T| $$">
+  <img src="ltxpng/2017-2-27-决策树_aa283a901d03768ffaab188d5f3224473271f6a2.png" alt="$C(T)$"> 为对训练数据的预测误差(如基尼指数)， <img src="ltxpng/2017-2-27-决策树_5673f5d47896e99fdded64809f53fc2124660b7c.png" alt="$|T|$"> 为子树的叶结点的个数， <img src="ltxpng/2017-2-27-决策树_c86821d79f4456aad75ca54a2bd59b73d0be152f.png" alt="$\alpha$"> 为权衡训练数据拟合程度和模型复杂度，<img src="ltxpng/2017-2-27-决策树_4aea25da34950267483e5802050f3440790a43f6.png" alt="$C_\alpha(T)$"> 为参数为 <img src="ltxpng/2017-2-27-决策树_c86821d79f4456aad75ca54a2bd59b73d0be152f.png" alt="$\alpha$"> 时的子树T的整体损失。 
+  用递归的方法进行剪枝，将 <img src="ltxpng/2017-2-27-决策树_c86821d79f4456aad75ca54a2bd59b73d0be152f.png" alt="$\alpha$"> 从小增大，得到临界点的 <img src="ltxpng/2017-2-27-决策树_91cb31499b40fa6daffbba35932c08360d13266f.png" alt="$\alpha_i$"> 的值， <img src="ltxpng/2017-2-27-决策树_ad8916c040974c2b751e15e4c46c114ac40656af.png" alt="$0=\alpha_0&amp;lt;\alpha_1&amp;lt;...&amp;lt;\alpha_n&amp;lt;+\infty$">, 产生一系列的区间 <img src="ltxpng/2017-2-27-决策树_094ca3dc7f9ec270be79c37e8e51cc2e75f7dd99.png" alt="$[\alpha_i, \alpha_{i+1}), i=0,1,2,...,n$">, 对应的最优子树序列 <img src="ltxpng/2017-2-27-决策树_f94b7576e6a9375b260c9be9ff41c7aa3a159eab.png" alt="${T_0, T_1,...,T_n}$"> 。
+2.在剪枝得到的子树序列张通过交叉验证选取最优子树 <img src="ltxpng/2017-2-27-决策树_1ddd97b4c31cf40f6725e9550699725d3d34b1bd.png" alt="$T_\alpha$">
+  利用独立数据集，测试子树序列的平方误差或基尼系数，最小的决策树被认为是最优的决策树。
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2017-02-27 周一 04:02</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

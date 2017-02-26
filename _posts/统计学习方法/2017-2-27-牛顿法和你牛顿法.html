@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>2017-2-27-牛顿法和你牛顿法</title>
+<!-- 2017-02-27 周一 03:58 -->
+<meta  charset="utf-8">
+<meta  name="generator" content="Org-mode">
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="orgstyle.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">2017-2-27-牛顿法和你牛顿法</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. 牛顿法</a></li>
+<li><a href="#sec-2">2. 拟牛顿法的思路</a></li>
+<li><a href="#sec-3">3. DFP算法</a></li>
+<li><a href="#sec-4">4. BFGS算法</a></li>
+<li><a href="#sec-5">5. Broyden算法</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 牛顿法</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+将f(x) 在 <img src="ltxpng/2017-2-27-牛顿法和你牛顿法_4eedea3b23219b0e008f84fbfe791862d0e42c22.png" alt="$x^{(k)}$"> 处附近进行二阶泰勒展开，并令其一阶导数为0，求的 <img src="ltxpng/2017-2-27-牛顿法和你牛顿法_e173ef6aa0b6bb3c5d2463cb3b266f95173323aa.png" alt="$x^{(k+1)}$"> 
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 拟牛顿法的思路</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+在牛顿法的迭代过程中，需要计算海塞矩阵的逆矩阵，计算复杂，考虑用n阶矩阵来近似替代。
+每次迭代选择更新矩阵 $G<sub>k+1</sub>$：
+<img src="ltxpng/2017-2-27-牛顿法和你牛顿法_e1bfe424d8336469e91229c3a4b712ca1792c988.png" alt="$$ G_{k+1} = G_{K} + \Delta 
+  G_{k} $$">
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> DFP算法</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<img src="ltxpng/2017-2-27-牛顿法和你牛顿法_4b2d30d1a94ee09132328a6c2de0dd102282e9ca.png" alt="$$G_{k+1} = G_k + \frac {\delta_k\delta_k^T}{\delta_k^Ty_k} - \frac{G_ky_ky_k^TG_k}{y_k^TG_ky_k} $$">
+可以证明，若初始矩阵 <img src="ltxpng/2017-2-27-牛顿法和你牛顿法_3b54b1ede0a0ba5bb62b24fae89cc9b540787fa5.png" alt="$G_0$"> 是正定的，则在迭代过程中的每个矩阵 <img src="ltxpng/2017-2-27-牛顿法和你牛顿法_cfff880e63048619b92615431f4959eefd9c3ccb.png" alt="$G_k$"> 都是正定的。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> BFGS算法</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+最流行的拟牛顿算法
+<img src="ltxpng/2017-2-27-牛顿法和你牛顿法_818e440523e73b6c2660b184e638f66952fcfd43.png" alt="$$ B_{k+1} = B_k + \frac{y_ky_k^T}{y_k^T\delta_k} - \frac{B_k\delta_k\delta_k^TB_k}{\delta_k^TB_k\delta_k} $$">
+可以证明，若初始矩阵 <img src="ltxpng/2017-2-27-牛顿法和你牛顿法_03768afd59b66406a6c6c6b4471141601ce92f50.png" alt="$B_0$"> 是正定大的，则迭代过程中的每个矩阵 <img src="ltxpng/2017-2-27-牛顿法和你牛顿法_8f5c80d5aa8566e19247bbf1a7e819850a61acba.png" alt="$B_k$"> 都是正定的。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Broyden算法</h2>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2017-02-27 周一 03:58</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

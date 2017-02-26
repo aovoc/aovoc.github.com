@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>2017-2-27-隐形马尔科夫模型</title>
+<!-- 2017-02-27 周一 04:00 -->
+<meta  charset="utf-8">
+<meta  name="generator" content="Org-mode">
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="orgstyle.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">2017-2-27-隐形马尔科夫模型</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. 马尔科夫模型的基本概念</a>
+<ul>
+<li><a href="#sec-1-1">1.1. 隐马尔科夫模型的定义</a></li>
+<li><a href="#sec-1-2">1.2. 观测序列的生成过程</a></li>
+<li><a href="#sec-1-3">1.3. 隐形马尔科夫模型的3个基本问题</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. 概率计算算法</a>
+<ul>
+<li><a href="#sec-2-1">2.1. 直接计算法</a></li>
+<li><a href="#sec-2-2">2.2. 前向算法</a></li>
+<li><a href="#sec-2-3">2.3. 后向算法</a></li>
+<li><a href="#sec-2-4">2.4. 一些概率与期望值的计算</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3. 学习算法</a>
+<ul>
+<li><a href="#sec-3-1">3.1. 监督学习方法</a></li>
+<li><a href="#sec-3-2">3.2. Baum-Welch算法(EM算法)</a></li>
+<li><a href="#sec-3-3">3.3. Baum-Welch 模型参数估计公式</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4. 预测算法</a>
+<ul>
+<li><a href="#sec-4-1">4.1. 近似算法</a></li>
+<li><a href="#sec-4-2">4.2. 维特比算法</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+隐形马尔科夫模型可用于标注问题的统计学习的模型，描述由隐形的马尔科夫链随机生成观测序列的过程,属于生成模型。在语音识别、自然语言处理、生物信息、模式识别等领域有广泛的应用。
+</p>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 马尔科夫模型的基本概念</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> 隐马尔科夫模型的定义</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+ 定义：隐马尔科夫模型是关于时序的概率模型，描述由一个隐藏的马尔科夫链随机生产不可观测的状态随机序列，再由各个状态生成一个观测而产生观测随机序列的过程。隐形的马尔科夫链随机生成的状态的序列，称为状态序列；每个状态产生一个观测，而由此产生的观测的随机序列，称为观测序列。序列的每一个位置又可以看作一个时刻。
+ 隐形马尔科夫模型由初始概率分布、状态转移概率分布、以及观测概率分布确定。
+ 形式定义：
+ Q是所有可能的状态的集合，V是所有可能的观测的集合。
+ <img src="ltxpng/2017-2-27-隐形马尔科夫模型_1de7a424a7873edf05932d042644f1d7d9ce62f8.png" alt="$$ Q = {q_1,q_2,...,q_N}, V = {v_1, v_2, ..., v_M} $$">
+ N：可能的状态数           M:可能的观测数
+ I是长度为T的状态序列，O是对应的观测序列。
+ <img src="ltxpng/2017-2-27-隐形马尔科夫模型_e2bd6982aa726bb1704d0a3fc8af8cf68824ba9e.png" alt="$$ I = (i_1, i_2, ..., i_T),  O = {o_1, o_2, ..., o_T} $$">
+ A是状态转移概率矩阵：
+ <img src="ltxpng/2017-2-27-隐形马尔科夫模型_e9e0f8997b2bcbc16c720da3ce91ba0655cfc186.png" alt="$$ A = [a_{ij}]_{N \times
+ N} $$">
+其中，
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_7458e7c894c7e8e84e083721f5916e142716b495.png" alt="$$a_{ij} = P(i_{t+1} = q_j | i_t = q_i), i= 1,2,...,N; j = 1,2,...,N$$"> 
+是在时刻t处于状态 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_1822fa3ddd634fc3320abb5031083965e2e2a341.png" alt="$q_i$"> 在时刻t+1跳转到状态 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_a1f130691faee5c66cfa09876ba2200063ccb3f3.png" alt="$q_j$"> 的概率。
+B是观测概率矩阵：
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_e63a96414a36d6014096c6aa1ce484f7754486a6.png" alt="$$ B = [b_j(k)]_{N \times M} $$">
+其中，
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_bf61b5febf71683eb3fc31cccbc427e0f6b39e1b.png" alt="$$ b_j(k) = P(o_t = v_k | i_t = q_j) , k = 1,2,...,M; j = 1,2,...,N $$">
+是在时刻t处于状态 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_a1f130691faee5c66cfa09876ba2200063ccb3f3.png" alt="$q_j$"> 的条件下生成观测 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_69d52206c91b4374052ab3f67c0e3fd957828b28.png" alt="$v_k$"> 的概率。
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_43dc51015311a997a06f52a8544f20b39f9967dd.png" alt="$\pi$"> 是初始状态概率向量：
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_2b0c9a7062a535b1a9e3926643b962886552a73e.png" alt="$$ \pi = (\pi_i),$$">
+其中，
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_c523d0649fdf49af0ffd248116b72f5a823bf91a.png" alt="$$\pi_i = P(i_1 = q_i) , i = 1,2,..., N$$">
+是在时刻t=1处于状态 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_1822fa3ddd634fc3320abb5031083965e2e2a341.png" alt="$q_i$"> 的慨率。
+</p>
+
+<p>
+隐形马尔科夫模型由初始概率向量 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_43dc51015311a997a06f52a8544f20b39f9967dd.png" alt="$\pi$"> 、状态转移概率矩阵A和观测概率矩阵B决定。<img src="ltxpng/2017-2-27-隐形马尔科夫模型_43dc51015311a997a06f52a8544f20b39f9967dd.png" alt="$\pi$"> 和A决定状态序列，B决定观测序列。因此，隐形马尔科夫模型 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_6460ac8726aa78f8eb9a1bdad7220f8e990b3bf9.png" alt="$\lambda$"> 可以用三元符号表示，即
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_6311596034b23ab3da56bf767991312af96fdcea.png" alt="$$\lambda = (A,B,\pi)$$">
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_df9c7eb725ca3a08f977f281a9453943af379788.png" alt="$A,B,\pi$"> 称为隐形马尔科夫模型的三要素。
+齐次马尔可夫假设：每一时刻只依赖于前一时刻
+观测独立性假设：观测只依赖于马尔科夫链的状态
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> 观测序列的生成过程</h3>
+</div>
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> 隐形马尔科夫模型的3个基本问题</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+(1)概率计算问题
+    给定模型 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_6460ac8726aa78f8eb9a1bdad7220f8e990b3bf9.png" alt="$\lambda$"> 和观测序列O，计算 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_318337239fd271cc1f57cfe0ca0e609a144aa9eb.png" alt="$P(O|\lambda)$"> 。
+(2)学习问题
+    已知观测序列O,估计模型 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_6460ac8726aa78f8eb9a1bdad7220f8e990b3bf9.png" alt="$\lambda$"> 参数， 使 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_318337239fd271cc1f57cfe0ca0e609a144aa9eb.png" alt="$P(O|\lambda)$"> 最大 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_ee02b6a8e268fb29034b088f567bcb7d2126c9fc.png" alt="$\to$"> 极大似然估计 。
+(3)预测问题
+    给定模型 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_6460ac8726aa78f8eb9a1bdad7220f8e990b3bf9.png" alt="$\lambda$"> 和 观测序列 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_ac5cde0551eb94b70e274371d64016b86064215b.png" alt="$O$"> , 求最有可能的对应的状态序列 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_18050e5e78e8c0147fc2c27e7f648fd8cd61a708.png" alt="$I$"> 。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 概率计算算法</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+前向算法、后向算法
+</p>
+</div>
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> 直接计算法</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+概念上可行，计算上不可行
+按概率公式直接计算，计算量大， <img src="ltxpng/2017-2-27-隐形马尔科夫模型_88c8901bb7324ec0ba85d826b4b3f4ab4c5ee157.png" alt="$O(TN^T)$"> 阶。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> 前向算法</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+前向概率定义：给定马尔科夫模型，定义到时刻t部分观测序列为 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_9170e139755deb8757e7321867ce2762ac080daa.png" alt="$o_1, o_2, ..., o_t$"> 且状态为 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_1822fa3ddd634fc3320abb5031083965e2e2a341.png" alt="$q_i$"> 的概率为前向概率，记作
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_6227d9310c5f3f9cecc90a163506b9aa358b0cb1.png" alt="$$ \alpha_t(i) = = P(o_1, o_2, ..., o_t, i_t = q_i | \lambda)$$"> 
+可以递归地求出前向概率 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_1f4a3202e61c8198b8bea91a8fa03952debf9341.png" alt="$\alpha_t(i)$"> 及观测序列概率 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_318337239fd271cc1f57cfe0ca0e609a144aa9eb.png" alt="$P(O|\lambda)$"> 。
+</p>
+
+<p>
+观测序列概率的前向算法
+(1)初值
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_57212d9188e5243d79cac6772bd1ba1a595c9285.png" alt="$$\alpha_t(i) = \pi_ib_i(o_1),  i = 1,2,..., N$$">
+(2)递推 对 t = 1,2,&#x2026;, T -1
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_64c000ad689616837cc0c116d405d01cbe1d8ff9.png" alt="$$\alpha_{t+1}(i) = [\sum_{j=1}^N \alpha_t(j)a_{ji}]b_i(o_{t+1})$$"> 
+(3)终止
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_0bbbd6806350e25a0585299d3e8d7b644d961efe.png" alt="$$P(O|\lambda) = \sum_{i=1}^N\alpha_{T}(i)$$">
+每一次计算直接引用前一个时刻的计算结果，避免重复计算。 计算量 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_58bd7ab135574c957e96b25cfdce8bc9d1bdbae5.png" alt="$O(TN^2)$"> 阶，直接计算是<img src="ltxpng/2017-2-27-隐形马尔科夫模型_88c8901bb7324ec0ba85d826b4b3f4ab4c5ee157.png" alt="$O(TN^T)$"> 阶。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> 后向算法</h3>
+</div>
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> 一些概率与期望值的计算</h3>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 学习算法</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+根据训练数据包含观测序列和对应的状态序列还是只有观测序列，可以分别由监督学习和非监督学习实现。
+</p>
+</div>
+
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 监督学习方法</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+用极大似然估计来估计隐马尔科夫模型的参数。
+1.转移概率 $a<sub>ij</sub> $ 的估计
+设样本中时刻t处于状态i，时刻t+1转移到状态j的频数为 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_c0eef1e09d68d184059d5896045fd02af56de463.png" alt="$A_{ij}$"> ,那么状态转移概率 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_9a94d1afc192166859cb779e5026844fe9c95478.png" alt="$a_{ij}$"> 的估计是
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_836a71eb549bd4e07b39d8b1a632a5a0e477da87.png" alt="$$\hat a_{ij} = \frac{A_{ij}}{\sum_{k=1}^{N}  A_{ik}}  i= 1,2,...,N; j = 1,2,...,N$$">
+2.观测概率 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_49aa2c71b683242e1af6de39c85b27f842e0f8a2.png" alt="$b_j(k)$"> 的估计
+设样本中的状态为j并观测为k的频数为 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_f2e7dda61c7b0904d340f920445a220f38e7f7ee.png" alt="$B_{jk}$"> ，那么状态为j观测为k的概率为
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_190d89da4f6a47c5d736cef195f4fdedab5ff578.png" alt="$$ \hat b_j(k) = \frac{B_{jk}}{\sum_{t=1}^NB_{jt}} , j =1,2,...,N; k=1,2,...,M$$">
+3.初始状态概率的估计 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_6e1adcf45336d5c9b4053dabaf6de4bb55f26d23.png" alt="$\hat \pi_i$"> 作为S个样本中初始状态为 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_1822fa3ddd634fc3320abb5031083965e2e2a341.png" alt="$q_i$"> 的频率。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> Baum-Welch算法(EM算法)</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+人工标记代价高 非监督学习方法
+</p>
+
+<p>
+给定观测序列，无状态序列，目标：学习隐马尔科夫模型的参数。
+EM算法学习实现：
+观测数据：观测序列数据O
+不可观测隐数据：状态序列数据I
+对数似然函数：<img src="ltxpng/2017-2-27-隐形马尔科夫模型_4020f8695f6dc86cb1e9b4a84359de602a538578.png" alt="$$logP(O,I|\lambda)$$">
+</p>
+
+<p>
+EM算法的E步：求Q函数 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_361f138e83d40168f3b3399e01a7a2ae2e9e24f6.png" alt="$Q(\lambda, \over
+line \lambda)$"> 。
+EM算法的M步：极大化Q函数求 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_b28993cc70281bc0663f32396a8fba71c98c99f6.png" alt="$A, B, \pi$"> 。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> Baum-Welch 模型参数估计公式</h3>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 预测算法</h2>
+<div class="outline-text-2" id="text-4">
+</div><div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> 近似算法</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+在每一时刻，选择最有可能发生的状态，作为预测结果。
+优点：计算简单
+缺点：不能保证预测的状态序列整体是最有可能的状态序列。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> 维特比算法</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+用动态规划解隐马尔科夫模型预测问题。
+部分最优路径唯一，通过递推分割由部分最优达到全局最优。
+</p>
+
+<p>
+定义在时刻t状态为i的所有单个路径 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_ca1d7414c1781df23e17c6bfe2843fe55fbfcc69.png" alt="$(i_1, i_2, ..., i_t)$"> 中概率最大值为
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_6813704512a02a2f6e9f8480452a493327c670e3.png" alt="$$ \delta_t(i) = max_{i_1,i_2,...i_t-1} P(i_t = i, i_{t-1}, ..., i_1, o_t, ..., o_1|\lambda), i=1,2,...,N$$">
+由定义可得变量 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_053f97450d3387b744b143abe85244d84fcac4cd.png" alt="$\delta$"> 的递推公式：
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_4415359c7c8aeea6042d297d49012716ecd48ff0.png" alt="$$\delta_{t+1}(i) = max_{i_1, i_2, ..., i_t} P(i_{t+1} = i, i_t, ..., i_1, o_{t+1}, o_t, ...., o_1| \lambda)$$">
+         <img src="ltxpng/2017-2-27-隐形马尔科夫模型_526c96c0209c1ac455ed0ef27318047382b25410.png" alt="$$= max_{1 \le j \le N}[\delta_t(j)a_{ji}]b_i(o_{t+1}),  i= 1,2,...,N; t =1,2,...,T-1$$">
+定义在时刻t状态为i的所有单个路径中概率最大的路径的第t-1个结点为 <img src="ltxpng/2017-2-27-隐形马尔科夫模型_5999b73a35d6170873b933b15419787e381c2d4e.png" alt="$\psi_t(i )$"> :用于找出最优路径的各个结点。
+<img src="ltxpng/2017-2-27-隐形马尔科夫模型_9e7e91681d796666adb0345c7034de3174abab35.png" alt="$$\psi_t(i) = arg\max_{1\le j \le N}[\delta_{t-1}(j)a_{ji}], i =1,2,...,N$$">
+</p>
+
+<p>
+算法
+(1)初始化
+(2)递推
+(3)终止
+(4)最优路径回溯
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2017-02-27 周一 04:00</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

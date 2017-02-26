@@ -1,0 +1,696 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>设计模式笔记</title>
+<!-- 2017-02-14 周二 12:22 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">设计模式笔记</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. 概述</a></li>
+<li><a href="#sec-2">2. UML基础</a>
+<ul>
+<li><a href="#sec-2-1">2.1. 事物</a>
+<ul>
+<li><a href="#sec-2-1-1">2.1.1. 结构事物</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-3">3. 设计模式简介</a></li>
+<li><a href="#sec-4">4. 创造性设计模式</a>
+<ul>
+<li><a href="#sec-4-1">4.1. 工厂方法模式（类创造型模式）</a></li>
+<li><a href="#sec-4-2">4.2. 抽象工厂模式</a></li>
+<li><a href="#sec-4-3">4.3. 生成器模式</a></li>
+<li><a href="#sec-4-4">4.4. 单例模式</a></li>
+<li><a href="#sec-4-5">4.5. 原型模式</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5. 结构性设计模式</a>
+<ul>
+<li><a href="#sec-5-1">5.1. 适配器模式</a></li>
+<li><a href="#sec-5-2">5.2. 桥接模式</a></li>
+<li><a href="#sec-5-3">5.3. 装饰模式</a></li>
+<li><a href="#sec-5-4">5.4. 组合模式</a></li>
+<li><a href="#sec-5-5">5.5. 门面模式</a></li>
+<li><a href="#sec-5-6">5.6. 代理模式</a></li>
+<li><a href="#sec-5-7">5.7. 享元模式</a></li>
+</ul>
+</li>
+<li><a href="#sec-6">6. 行为型设计模式</a>
+<ul>
+<li><a href="#sec-6-1">6.1. 职责链模式</a></li>
+<li><a href="#sec-6-2">6.2. 命令模式</a></li>
+<li><a href="#sec-6-3">6.3. 解释器模式</a></li>
+<li><a href="#sec-6-4">6.4. 迭代器模式</a></li>
+<li><a href="#sec-6-5">6.5. 中介者模式</a></li>
+<li><a href="#sec-6-6">6.6. 备忘录模式</a></li>
+<li><a href="#sec-6-7">6.7. 观察者模式</a></li>
+<li><a href="#sec-6-8">6.8. 状态模式</a></li>
+<li><a href="#sec-6-9">6.9. 策略模式</a></li>
+<li><a href="#sec-6-10">6.10. 模板方法模式</a></li>
+<li><a href="#sec-6-11">6.11. 访问者模式</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 概述</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+设计模式：针对软件设计问题的形式化解决方案。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> UML基础</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+UML：统一建模语言
+</p>
+</div>
+
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> 事物</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+包括结构事物、行为事物、分组事物、注释事物
+</p>
+</div>
+<div id="outline-container-sec-2-1-1" class="outline-4">
+<h4 id="sec-2-1-1"><span class="section-number-4">2.1.1</span> 结构事物</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<p>
+定义模型的静态部分，用于物理化和概念化的元素。常见结构事物：类、接口、用例、主动类、组件、节点
+</p>
+</div>
+
+<ol class="org-ol"><li><a id="sec-2-1-1-1" name="sec-2-1-1-1"></a>类符号<br  /><div class="outline-text-5" id="text-2-1-1-1">
+<p>
+UML视图表示类，视图分为4个部分：类名、属性、方法、附加组件
+用于描述访问权限修饰词的符号：
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="center" />
+
+<col  class="center" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="center">访问权限控制符</th>
+<th scope="col" class="center">符号</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="center">private</td>
+<td class="center">-</td>
+</tr>
+
+<tr>
+<td class="center">protected</td>
+<td class="center">#</td>
+</tr>
+
+<tr>
+<td class="center">public</td>
+<td class="center">+</td>
+</tr>
+
+<tr>
+<td class="center">无修饰词</td>
+<td class="center">无符号</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+
+<li><a id="sec-2-1-1-2" name="sec-2-1-1-2"></a>对象符号<br  /><div class="outline-text-5" id="text-2-1-1-2">
+<p>
+下方有一条下划线
+</p>
+</div>
+</li>
+
+<li><a id="sec-2-1-1-3" name="sec-2-1-1-3"></a>接口<br  /><div class="outline-text-5" id="text-2-1-1-3">
+<p>
+用圆表示，名称写在下方
+</p>
+</div>
+</li>
+
+<li><a id="sec-2-1-1-4" name="sec-2-1-1-4"></a>协作符号<br  /><div class="outline-text-5" id="text-2-1-1-4">
+<p>
+由虚线画的椭圆表示，椭圆中间写名称
+</p>
+
+<p>
+&#x2026;&#x2026;
+</p>
+</div>
+</li></ol>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 设计模式简介</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+GoF 23种设计模式，分为三种类型：创造型设计模式、结构型设计模式、行为型设计模式
+创造型设计模式，完成对象的实例化，包括：
+    抽象工厂设计模式
+    生成器设计模式
+    工厂方法设计模式
+    原型设计模式
+    单例设计模式
+结构型设计模式，指导我们完成代码的结构划分：
+    适配器设计模式
+    桥接设计模式
+    组合设计模式
+    装饰设计模式
+    门面设计模式
+    享元设计模式
+    代理设计模式
+行为型设计模式，定义对象之间的通信和控制流程：
+    职责链设计模式
+    命令设计模式
+    解释器设计模式
+    迭代器设计模式
+    中介者设计模式
+    备忘录设计模式
+    状态设计模式
+    模板方法设计模式
+    访问者设计模式
+</p>
+
+<p>
+不要滥用设计模式！
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 创造性设计模式</h2>
+<div class="outline-text-2" id="text-4">
+</div><div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> 工厂方法模式（类创造型模式）</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+定义产品类，并以此扩展出具体产品类。之后创建工厂类，用于创建产品。工厂类包含工厂方法，根据传递的参数决定具体使用哪个子类进行实例化。
+应用场景：
+  需要创建一个类，不能确定类的类型，需运行时确定时
+  当一个类希望由其子类来指定所创建对象的具体类型时
+  当我们要定位被创建类，并获取相关信息时
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> 抽象工厂模式</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+相比于工厂方法模式的抽象层次更高，抽象工厂会返回一个工厂。
+抽象工厂、具体工厂、抽象产品、具体产品、客户端
+客户端：使用由抽象工厂和抽象产品类声明的唯一接口
+客户端与抽象类是关联关系。它并不知道任何具体的实现细节，抽象工厂的具体实现由客户端在运行时决定。客户端与具体的产品类之间彻底解耦。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> 生成器模式</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+从简单的对象一步一步生成复杂的对象。逐步构建对象并在最后一步返回对象地点创造型模式。
+生成器类：提供一个接口用于创建产品的各个组成部件。具体生成器提供此接口的具体实现。
+具体生成器：跟踪所创建对象的表现形式，创建对象的同时提供一个接口用于获取产品。
+导演类：通过生成器提供的接口构造对象。
+隐藏产品构建的内部细节，生成器之间相互独立，提高代码的模块化
+</p>
+
+<p>
+生成器模式和抽象工厂模式的区别：
+生成器模式逐步完成对象的构建，而抽象工厂模式不会使用步骤来完成对象的构造。
+抽象工厂模式不需要知道对象确切的子类型，生成器模式在描述对象时需要知道确切的子类型。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4-4" class="outline-3">
+<h3 id="sec-4-4"><span class="section-number-3">4.4</span> 单例模式</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+最常用的设计模式。
+多线程被动实例化
+</p>
+
+<pre class="example">
+public class Singleton{
+    private static Singleton instance;
+
+    private Singleton(){}
+    public static Singleton getInstance(){
+        if(instance == NULL){
+	  synchronized(Singleton.class){
+	        if(instance == NULL){
+	             instance = new Singleton();
+	        }
+	   }
+       }
+     }
+}
+</pre>
+<p>
+主动实例化
+</p>
+<pre class="example">
+public class Singleton{
+    private static Singleton instance = new Singleton();
+    private Singleton();
+    public static getInstance(){
+        return instance;
+    }
+}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-4-5" class="outline-3">
+<h3 id="sec-4-5"><span class="section-number-3">4.5</span> 原型模式</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+克隆方法。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> 结构性设计模式</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+适配器模式、桥接模式、组合模式、装饰模式、门面模式、享元模式、代理模式
+</p>
+</div>
+<div id="outline-container-sec-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> 适配器模式</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+也称为包装模式，能够帮助那些因为接口不兼容而无法一起工作的类，以便他们能够一起工作。也负责将数据转换成适当的模式。
+在具体实现中，有两种实际应用适配器模式的方法：
+    使用继承[类适配器]
+    使用关联[对象适配器]
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-5-2" class="outline-3">
+<h3 id="sec-5-2"><span class="section-number-3">5.2</span> 桥接模式</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+将类的接口与接口的实现相互解耦，提高系统的灵活性，使得接口和实现两者均可独立变化。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-5-3" class="outline-3">
+<h3 id="sec-5-3"><span class="section-number-3">5.3</span> 装饰模式</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+用于在运行时修改或扩展实例的行为。
+装饰模式与继承的区别：不需要逐个创建子类，在运行时将子类与特定的功能联系起来，更改原有类各个实例的生成效果。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-5-4" class="outline-3">
+<h3 id="sec-5-4"><span class="section-number-3">5.4</span> 组合模式</h3>
+<div class="outline-text-3" id="text-5-4">
+<p>
+组合模式中存在一个树形结构，并且该结构中的分支节点和叶节点上都能够执行相同的操作。
+允许我们使用递归的方式将类似的对象组合成一种树形结构，来实现复杂结构对象的构建。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-5-5" class="outline-3">
+<h3 id="sec-5-5"><span class="section-number-3">5.5</span> 门面模式</h3>
+<div class="outline-text-3" id="text-5-5">
+<p>
+隐藏系统内部的复杂结构并为客户端提供一个简单的接口，以便客户端对系统进行访问。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-5-6" class="outline-3">
+<h3 id="sec-5-6"><span class="section-number-3">5.6</span> 代理模式</h3>
+<div class="outline-text-3" id="text-5-6">
+<p>
+推迟对象的创建和初始化，以避免大量的资源开销，直到要用的时候才初始化。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-5-7" class="outline-3">
+<h3 id="sec-5-7"><span class="section-number-3">5.7</span> 享元模式</h3>
+<div class="outline-text-3" id="text-5-7">
+<p>
+能够减少用于创建和操作大量相似的细碎对象所花费的成本。通过共享对象来减少内存负载。根据对象的属性将对象分割成两种类型：内蕴状态和外蕴状态。
+外蕴状态以接口的方式传入，内蕴状态保持不变
+</p>
+
+<p>
+具有内蕴状态的对象称为抽象享元角色。当实现抽象享元模式的时候，我们需要创建具体享元角色，并存储其内蕴状态。要创建这些具体对象，我们需要创建一个工厂，这个工厂要确保对象共享，同时保证我们不会重复创建对象。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> 行为型设计模式</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+松耦合是软件架构设计的关键。在行为型设计模式中，功能实现与该实现的客户端之间应该是松耦合的，以避免硬编码和依赖性。
+</p>
+</div>
+
+<div id="outline-container-sec-6-1" class="outline-3">
+<h3 id="sec-6-1"><span class="section-number-3">6.1</span> 职责链模式</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+由发送端发送一个请求到另一对象链中，链中的对象决定响应请求或者转发给下一对象。
+目的:通过特定设计对请求的发送者和接收者进行解耦。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-sec-6-2" class="outline-3">
+<h3 id="sec-6-2"><span class="section-number-3">6.2</span> 命令模式</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+实现发送者和接收者之间的完全解耦。
+与命令模式相关的三个术语：客户端、调用者和接收者。
+抽象命令类、具体命令类、客户端、调用者、接收者
+客户端完成对命令对象的实例化并提供随后需要调用的方法的信息。
+命令模式示例：多级撤销、业务行为、进度条、网络
+目的：将请求封装成一个对象，从而使客户端可以将不同的请求、队列、日志请求及其他支持撤销的操作进行参数化。
+发出请求的对象无需知道请求对应的操作和请求接收者的任何信息。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-6-3" class="outline-3">
+<h3 id="sec-6-3"><span class="section-number-3">6.3</span> 解释器模式</h3>
+<div class="outline-text-3" id="text-6-3">
+<p>
+在程序中解析特定语法的设计模式。
+UML类图包含：
+内容类：包含解释器的全部信息
+表达式：带有名为interpret抽象方法的抽象类
+终结符表达式：
+非终结符表达式：
+客户端：建立抽象树，并调用抽象树中的interpret方法。
+仅仅用于需要进行正式语法解释的地方，实际中不常使用该模式。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-6-4" class="outline-3">
+<h3 id="sec-6-4"><span class="section-number-3">6.4</span> 迭代器模式</h3>
+<div class="outline-text-3" id="text-6-4">
+<p>
+最常用的设计模式
+迭代器使用场景：
+需要访问一个聚合对象的内容，而无需了解其内部表示；
+支持对聚合对象的多种遍历模式；
+为遍历不同的聚合结构提供统一的接口（即支持多态迭代）
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-sec-6-5" class="outline-3">
+<h3 id="sec-6-5"><span class="section-number-3">6.5</span> 中介者模式</h3>
+<div class="outline-text-3" id="text-6-5">
+<p>
+中介者模式：关心数据交互的设计模式。
+容易理解，难以实现。
+一个中介者对象能够，负责协调一系列对象之间的一系列不同的数据请求。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-sec-6-6" class="outline-3">
+<h3 id="sec-6-6"><span class="section-number-3">6.6</span> 备忘录模式</h3>
+<div class="outline-text-3" id="text-6-6">
+<p>
+提供回滚撤销的能力。
+创建一个外部对象，使用对象的访问方法来获取我们需要保存的状态。对象状态和形式状态高度耦合。
+对象包括：发起者、管理者、备忘录
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-6-7" class="outline-3">
+<h3 id="sec-6-7"><span class="section-number-3">6.7</span> 观察者模式</h3>
+<div class="outline-text-3" id="text-6-7">
+<p>
+定义对象之间的链接，这样当一个对象的状态发生变化时，所有存在依存的对象会自动更新。
+被观察者提供特定接口，用于在被观察者所维护的观察者集合中添加或者移除观察者。
+观察者提供一个接口，用于更新观察者。
+实现了被观察者和观察者的松耦合。
+包含类：被观察者(listener)、具体被观察者(concreteListener)、观察者(Observer)、具体观察者(ConcreteObserver)
+</p>
+
+<p>
+推和拉通信模式
+推模式：无论观察者是否用到数据，被观察者都会将发生改变的信息发送给观察者。
+拉模式：被观察者仅仅在状态发生变化时通知观察者，而这时需要各个观察者向被观察者请求需要数据。
+</p>
+
+
+<p>
+又称为 依赖模式 或者 发布-订阅模式
+定义一对多的依赖关系
+被观察者和观察者之间是抽象耦合的
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-sec-6-8" class="outline-3">
+<h3 id="sec-6-8"><span class="section-number-3">6.8</span> 状态模式</h3>
+<div class="outline-text-3" id="text-6-8">
+<p>
+根据状态变化来改变对象的行为。
+内容类：用于状态模式的客户端，拥有具体的状态对象并根据其当前状态提供所需实现的行为
+抽象状态类、具体状态类
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-6-9" class="outline-3">
+<h3 id="sec-6-9"><span class="section-number-3">6.9</span> 策略模式</h3>
+<div class="outline-text-3" id="text-6-9">
+<p>
+用于需要使用不同的算法来处理不同的数据时。
+抽象策略类、具体策略类、内容类
+</p>
+
+<pre class="example">
+public class Content{
+      private virturalStrategy strategy;
+      ......
+}
+</pre>
+
+<p>
+状态模式和策略模式的区别：
+      意图不同：在策略模式中，由对象来决定使用哪种算法，而在状态模式中，则由控制算法的客户端来决定。
+</p>
+
+<p>
+策略模式和状态模式的应用场景有很大的不同；一个是封装一系列平行且复杂多变的实现方式，一个是实现把对象的内在状态的变化封装起来，用外部行为来表现出来；
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-6-10" class="outline-3">
+<h3 id="sec-6-10"><span class="section-number-3">6.10</span> 模板方法模式</h3>
+<div class="outline-text-3" id="text-6-10">
+<p>
+是一种类行为型模式。一个模板方法定义算法会定义算法的各个执行步骤。步骤通过由子类通过重写来实现，保证算法的完整性并能够实现多种不同的功能。
+类行为型模式使用继承来实现模式的功能。
+模板方法模式中的类：
+抽象类：定义了算法的抽象操作，并交由具体的子类完成这些操作的具体实现。
+具体类：继承抽象类，通过执行基本操作来实现算法类的具体步骤。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-sec-6-11" class="outline-3">
+<h3 id="sec-6-11"><span class="section-number-3">6.11</span> 访问者模式</h3>
+<div class="outline-text-3" id="text-6-11">
+<p>
+用来简化对象相关操作的分组。这些操作由访问者来执行，而非放在被访问的类中。
+避免使用instanceof运算符对相似的类执行计算。
+执行操作的代码会集中在访问者中，而不是分散在对象的分组中，提供更好的可维护性。
+</p>
+
+<p>
+访问者模式包含类：访问者、具体访问者、元素类、具体元素类、结构对象
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2017-02-14 周二 12:22</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

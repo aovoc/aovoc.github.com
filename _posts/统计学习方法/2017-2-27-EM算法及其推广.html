@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>2017-2-27-EM算法及其推广</title>
+<!-- 2017-02-27 周一 04:01 -->
+<meta  charset="utf-8">
+<meta  name="generator" content="Org-mode">
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="orgstyle.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">2017-2-27-EM算法及其推广</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. EM算法的引入</a>
+<ul>
+<li><a href="#sec-1-1">1.1. EM算法</a></li>
+<li><a href="#sec-1-2">1.2. EM算法的导出</a></li>
+<li><a href="#sec-1-3">1.3. EM算法在非监督学习中的作用</a></li>
+<li><a href="#sec-1-4">1.4. EM算法的收敛性</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. EM算法在高斯混合模型中的应用</a>
+<ul>
+<li><a href="#sec-2-1">2.1. 高斯混合模型</a></li>
+<li><a href="#sec-2-2">2.2. 高斯混合模型参数估计的EM算法</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3. EM算法的推广</a>
+<ul>
+<li><a href="#sec-3-1">3.1. F函数的极大-极大算法</a></li>
+<li><a href="#sec-3-2">3.2. GEM算法</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+EM算法及其推广用于含有隐参数的概率模型参数的极大似然估计，或极大后验概率估计。
+  迭代由两步组成：
+    E步：求期望 M步：求极大
+</p>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> EM算法的引入</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+最大似然估计需满足一个重要假设：采样是独立同分布的
+最大后验概率估计：与最大似然估计类似，但最大的不同是最大后验概率估计融入了要估计量的先验分布在其中。故最大后验概率估计可以看做规则化的最大似然估计。
+</p>
+</div>
+<div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> EM算法</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+定义Q函数：
+完全数据的对数似然函数 <img src="ltxpng/2017-2-27-EM算法及其推广_075f510fe4920d99a05b6e8dc5325212e87bb17e.png" alt="$$logP(Y,Z|\theta)$$">关于在给定观测数据Y和当前参数 <img src="ltxpng/2017-2-27-EM算法及其推广_9756ce68eb5843ab4e17a16f6b8dcf792e8d15bb.png" alt="$$\theta^{(i)}$$"> 下对未观测数据Z的条件概率的期望称为Q函数， 即
+<img src="ltxpng/2017-2-27-EM算法及其推广_bae2b3a0d033b4a884d8810e6004e4414ac86f98.png" alt="$$Q(\theta, \theta^{(i)}) = E_Z[logP(Y,Z|\theta)| Y, \theta^{(i)}]$$">
+</p>
+
+<p>
+EM算法与选取的初值有关，选择不同的初值得到不同的参数估计值。
+EM算法
+输入：观测变量数据值Y,隐变量数据Z,联合分布 <img src="ltxpng/2017-2-27-EM算法及其推广_7145daa23dab251fe336b50942c609d45c06c44a.png" alt="$P(Y,Z|\theta)$">, 条件分布 <img src="ltxpng/2017-2-27-EM算法及其推广_b9b68403909e162eb1d47dc3ab67b8ddcce67ae3.png" alt="$P(Y,Z | \theta )$"> 。
+输出：模型参数 <img src="ltxpng/2017-2-27-EM算法及其推广_ccad23e48fa0a0218e69263bdac73fbf23957db8.png" alt="$\theta$"> 
+(1)选择参数 <img src="ltxpng/2017-2-27-EM算法及其推广_e1e804992d9c4769252ddf1610346411c9b0b547.png" alt="$\theta^{(0)}$"> ， 开始迭代
+(2)E步：记 <img src="ltxpng/2017-2-27-EM算法及其推广_bb8f3b1565cbc17f78440b36bad3f00212f7174d.png" alt="$\theta^{(i)}$"> 为第i次迭代参数 <img src="ltxpng/2017-2-27-EM算法及其推广_ccad23e48fa0a0218e69263bdac73fbf23957db8.png" alt="$\theta$"> 的估计值，在第i+1次迭代的E步，计算
+<img src="ltxpng/2017-2-27-EM算法及其推广_529008f4659f92d67bf5eb984efe80a2506fad66.png" alt="$$ Q(\theta, \theta^{(i)}) = E_Z[logP(Y,Z|\theta)|Y,\theta^{(i)}] $$">
+<img src="ltxpng/2017-2-27-EM算法及其推广_5f1f6b5ebeb575ef4c0a95cc8aeadbe115ca9313.png" alt="$$  =\sum_ZlogP(Y,Z|\theta)P(Z|Y, \theta^{(i)})$$">
+(3)M步：求使 <img src="ltxpng/2017-2-27-EM算法及其推广_f4b3bb8806fd5c493af8a31a475875ee960d03a8.png" alt="$Q(\theta, \theta^{(i)})$"> 极大化的 <img src="ltxpng/2017-2-27-EM算法及其推广_ccad23e48fa0a0218e69263bdac73fbf23957db8.png" alt="$\theta$">,确定第i+1次的估计值<img src="ltxpng/2017-2-27-EM算法及其推广_4924f22bdbd2ae5d566144f53622f9f654e160f5.png" alt="$\theta^{(i+1)}$">
+<img src="ltxpng/2017-2-27-EM算法及其推广_f076221c74ac3ede9406bd46c2b07855e4e6900a.png" alt="$$\theta^{(i+1)} = arg max_{\theta}Q(\theta,\theta^{(i)})$$">
+(4)重复第(2)步和第(3)步，直到收敛。
+第二步中的Q函数是EM算法的核心。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> EM算法的导出</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+通过近似求解观测数据的对数似然函数的极大化问题来导出EM算法。看出EM算法的作用。
+EM算法通过不断求解下界的极大化逼近求解对数似然函数极大化，不能保证找到全局最优值。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> EM算法在非监督学习中的作用</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+EM算法可以用于生成模型的非监督学习。生成模型由联合概率分布P(X,Y)表示，可以认为非监督学习训练数据是联合分布产生的数据，X是观测数据，Y是未观测数据。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> EM算法的收敛性</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+定理：设 <img src="ltxpng/2017-2-27-EM算法及其推广_d669589656bf33449a07ee1e6d9f350862c8c0da.png" alt="$P(Y|\theta)$"> 为观测数据的似然函数，
+<img src="ltxpng/2017-2-27-EM算法及其推广_38649093a388ba9c1e89265aaa5984d7e2334e63.png" alt="$\theta^{(i)}(i=1,2,...)$"> 为EM算法得到的参数估计序列， <img src="ltxpng/2017-2-27-EM算法及其推广_6fd33d8133fe280fbf4938b5fbbc73d6d5df5276.png" alt="$P(Y|\theta^{(i)})(i=1,2,...)$"> 为对应的似然函数序列，则 <img src="ltxpng/2017-2-27-EM算法及其推广_832d5deecb7fe75157716de162d4aef2bb11d956.png" alt="$P(Y|\theta^{(i)})$"> 是单调递增的。
+</p>
+
+<p>
+定理：&#x2026;.
+定理只能保证参数估计序列收敛到对数似然函数序列的稳定点，不能保证收敛到极大值点。
+常用方法是选取几个不同的初值进行迭代，然后从得到的各个估计值加以比较，从中选择最好的。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> EM算法在高斯混合模型中的应用</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+EM算法的一个重要应用：高斯混合模型的参数估计
+</p>
+</div>
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> 高斯混合模型</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+高斯混合模型：
+<img src="ltxpng/2017-2-27-EM算法及其推广_70eca07e09fe06f0fa5df781d06256c617971308.png" alt="$$ P(y|\theta) = \sum_{k=1}^K\alpha_k\Phi(y|\theta_k) $$">
+其中，<img src="ltxpng/2017-2-27-EM算法及其推广_76dc6fbb4c057e3bdad570728517b66a871d8b7d.png" alt="$\alpha_k$"> 是系数， <img src="ltxpng/2017-2-27-EM算法及其推广_5b8107714abea22f7571595a37edd08d562d616c.png" alt="$\Phi(y|\theta_k)$"> 是高斯分布密度
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> 高斯混合模型参数估计的EM算法</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+1.明确隐变量，写出完全数据的对数似然函数
+隐变量：反映观测数据 <img src="ltxpng/2017-2-27-EM算法及其推广_0c21ed6b5bc6a83a9b6484453d3a9fad973c11d3.png" alt="$\gamma_j$"> 来自第k个分模型的未知数据，记为 <img src="ltxpng/2017-2-27-EM算法及其推广_2a2838a8699ec2f72a9e288e4ce81ab3fbd73d58.png" alt="$\gamma_{jk}$">
+观测数据： <img src="ltxpng/2017-2-27-EM算法及其推广_0c21ed6b5bc6a83a9b6484453d3a9fad973c11d3.png" alt="$\gamma_j$">  未观测数据 <img src="ltxpng/2017-2-27-EM算法及其推广_2a2838a8699ec2f72a9e288e4ce81ab3fbd73d58.png" alt="$\gamma_{jk}$">
+完全数据的似然函数：
+<img src="ltxpng/2017-2-27-EM算法及其推广_f5c95ee03a19a122609bd0e79d417f78e6bea481.png" alt="$$P(y,\gamma|\theta) = \prod_{j=1}^N P(\gamma_j, \gamma_{j1}, \gamma_{j2},..., \gamma_{jK}), j = 1,2,...,N $$"> 
+</p>
+
+<p>
+2.EM算法的E步，确定Q函数
+<img src="ltxpng/2017-2-27-EM算法及其推广_6bf01932198936f1f9b0e30916d310b4f8013a91.png" alt="$$ Q(\theta, \theta^{(i)}) = E[logP(y,\gamma|\theta)|y,\theta^{(i)}]$$">     
+计算 <img src="ltxpng/2017-2-27-EM算法及其推广_0f650eb379305749bd3a79f4fd82e7b90957cf42.png" alt="$E(\gamma_{jk}|y, \theta)$"> 当前模型的第j个观测数据来自第k个分模型的概率， 记为 <img src="ltxpng/2017-2-27-EM算法及其推广_954463379334c312480091ce1e3034a3dd5c5439.png" alt="$\hat \gamma_{jk}$"> 。
+</p>
+
+<p>
+3.确定EM算法的M步。
+用 <img src="ltxpng/2017-2-27-EM算法及其推广_59759be7afd48663bf3e233e48516ec40de96e2e.png" alt="$\hat \mu_k$"> , <img src="ltxpng/2017-2-27-EM算法及其推广_793e82a45d56d8b41ba97a8df8bb8b263f89ddfc.png" alt="$\hat\sigma_k^2$"> ， <img src="ltxpng/2017-2-27-EM算法及其推广_b59ce1e0088122900d1ce4f7ab799ef3fd9d88bf.png" alt="$\hat\alpha_k$"> 表示 <img src="ltxpng/2017-2-27-EM算法及其推广_425b29554fb2fcdf9f26a2d75fadc2f492308b5d.png" alt="$\theta^{(k)}$"> 的各参数，通过偏导数为0求的值。
+重复上述过程，直至对数似然函数不再有明显变化。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> EM算法的推广</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+EM算法还可以解释为F函数的极大-极大算法，基于这个解释有若个变形和推广  GEM
+</p>
+</div>
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> F函数的极大-极大算法</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+定义： 隐变量数据Z的概率分布为 <img src="ltxpng/2017-2-27-EM算法及其推广_53f0cf8d52cc6e8d4f055134aa1af02e0bd9402a.png" alt="$\widetilde P(Z)$"> ,定义分布 <img src="ltxpng/2017-2-27-EM算法及其推广_ad288994d27b9c75b8a0a89c090364c28b91bb72.png" alt="$\widetilde P$"> 与参数 <img src="ltxpng/2017-2-27-EM算法及其推广_ccad23e48fa0a0218e69263bdac73fbf23957db8.png" alt="$\theta$"> 的函数 <img src="ltxpng/2017-2-27-EM算法及其推广_4a7bbecf42a5338db6d1f7032f783229af415c29.png" alt="$F(\widetilde P, \theta)$"> 如下：
+<img src="ltxpng/2017-2-27-EM算法及其推广_776a0dd7f73b8e06d03888de49b3465ec512ca87.png" alt="$$ F(\widetilde P, \theta) = E_{\widetilde P}[logP(Y,Z|\theta)] + H(\widetilde P) $$"> 
+称为F函数， 式中 <img src="ltxpng/2017-2-27-EM算法及其推广_a59ec321b78a1c1a6bfb3c42165312fd27d2b49e.png" alt="$H(\widetilde P)$"> 是分布 <img src="ltxpng/2017-2-27-EM算法及其推广_53f0cf8d52cc6e8d4f055134aa1af02e0bd9402a.png" alt="$\widetilde P(Z)$"> 的熵。
+</p>
+
+<p>
+EM算法的一次迭代可由F函数的极大-极大算法实现
+(1) 对固定的 <img src="ltxpng/2017-2-27-EM算法及其推广_bb8f3b1565cbc17f78440b36bad3f00212f7174d.png" alt="$\theta^{(i)}$"> ,求 <img src="ltxpng/2017-2-27-EM算法及其推广_56eff0a73cc0ec5da54055f9dae433671efe5cc1.png" alt="$\widetilde P^{(i+1)}$"> ，使得  <img src="ltxpng/2017-2-27-EM算法及其推广_3f17c1e7f50de53473e8632fed7e70ae47ba9dbd.png" alt="$F(\widetilde P, \theta^{(i)})$"> 最大化。
+(2) 对固定的 <img src="ltxpng/2017-2-27-EM算法及其推广_56eff0a73cc0ec5da54055f9dae433671efe5cc1.png" alt="$\widetilde P^{(i+1)}$"> ,求 <img src="ltxpng/2017-2-27-EM算法及其推广_4924f22bdbd2ae5d566144f53622f9f654e160f5.png" alt="$\theta^{(i+1)}$"> ,使得 <img src="ltxpng/2017-2-27-EM算法及其推广_2c50f24182b4080065d1d08683a1dc47ac6dac7b.png" alt="$F(\widetilde P^{(i+1)}, \theta)$"> 最大化。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> GEM算法</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+GEM算法1: EM算法的F函数方法表达
+GEM算法2: 并不直接求极大，而是找到一个 <img src="ltxpng/2017-2-27-EM算法及其推广_ccad23e48fa0a0218e69263bdac73fbf23957db8.png" alt="$\theta$"> 使函数值变大。
+GEM算法3: 参数 <img src="ltxpng/2017-2-27-EM算法及其推广_ccad23e48fa0a0218e69263bdac73fbf23957db8.png" alt="$\theta$"> 的维数d&gt;=2时，将M步分解为d次条件极大化。
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2017-02-27 周一 04:01</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

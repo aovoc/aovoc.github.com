@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>2017-2-27-条件随机场</title>
+<!-- 2017-02-27 周一 04:00 -->
+<meta  charset="utf-8">
+<meta  name="generator" content="Org-mode">
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="orgstyle.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">2017-2-27-条件随机场</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. 概率无向图模型</a>
+<ul>
+<li><a href="#sec-1-1">1.1. 模型定义</a></li>
+<li><a href="#sec-1-2">1.2. 概率无向图的因式分解</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. 条件随机场的定义和形式</a>
+<ul>
+<li><a href="#sec-2-1">2.1. 条件随机场的定义</a></li>
+<li><a href="#sec-2-2">2.2. 条件随机场的参数化形式</a></li>
+<li><a href="#sec-2-3">2.3. 条件随机场的简化形式</a></li>
+<li><a href="#sec-2-4">2.4. 条件随机场的矩阵形式</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3. 条件随机场的概率计算问题</a>
+<ul>
+<li><a href="#sec-3-1">3.1. 前向-后向算法</a></li>
+<li><a href="#sec-3-2">3.2. 概率计算</a></li>
+<li><a href="#sec-3-3">3.3. 期望值计算</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4. 条件随机场的学习算法</a>
+<ul>
+<li><a href="#sec-4-1">4.1. 改进的迭代尺度法</a></li>
+<li><a href="#sec-4-2">4.2. 拟牛顿法</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5. 条件随机场的预测算法</a></li>
+</ul>
+</div>
+</div>
+<p>
+条件随机场(CRF)是给定一组输入随机变量条件下另一组输出随机变量的条件概率分布模型。
+特点：假设输出随机变量构成马尔科夫随机场。
+主要讲述线性链条件随机场
+</p>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 概率无向图模型</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+又称为马尔科夫随机场，可以由无向图表示的联合概率分布。
+</p>
+</div>
+<div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> 模型定义</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+无向图表示的随机变量之间存在成对马尔科夫性、局部马尔可夫性、全局马尔科夫性。
+成对马尔可夫性：u,v是没有边连接的结点，O是其他结点，给定随机变量组 <img src="ltxpng/2017-2-27-条件随机场_63e96a797b6eac44565703a6af6f81ba8a238062.png" alt="$Y_O$"> 的条件下随机变量 <img src="ltxpng/2017-2-27-条件随机场_45d6f5d0659dd3415090b6db9efa92b1ecc25bc0.png" alt="$Y_u$"> 和 <img src="ltxpng/2017-2-27-条件随机场_87715873955634f68c7c1597193e3c1f33ebd367.png" alt="$Y_v$"> 是条件独立的。
+局部马尔可夫性：W是与v有边连接的结点，O是其他结点，给定随机变量组 <img src="ltxpng/2017-2-27-条件随机场_b607fe153677d8010a88a2f5c3a055089bae135b.png" alt="$Y_W$"> 的条件下随机变量 <img src="ltxpng/2017-2-27-条件随机场_87715873955634f68c7c1597193e3c1f33ebd367.png" alt="$Y_v$"> 和 <img src="ltxpng/2017-2-27-条件随机场_63e96a797b6eac44565703a6af6f81ba8a238062.png" alt="$Y_O$"> 是条件独立的。
+全局马尔可夫性：点集合A,B是被C分开的任意结点集合，给定随机变量组 <img src="ltxpng/2017-2-27-条件随机场_aedbe5025249c503d9de7d67fbdd56f4a99a2d86.png" alt="$Y_C$"> 的条件下随机变量组 <img src="ltxpng/2017-2-27-条件随机场_f9e467478f8f7b7cf497ed29d443f5c86a72baeb.png" alt="$Y_A$"> 和 <img src="ltxpng/2017-2-27-条件随机场_10ab5b270bdf5db41cf1e2b2873241814572a72f.png" alt="$Y_B$"> 是条件独立的。
+</p>
+
+<p>
+概率无向图模型定义：
+结点表示随机变量，边表示依赖关系。若联合概率分布P(Y)满足成对马尔可夫性、局部马尔可夫性、全局马尔可夫性，就称此联合概率分布为概率无向图模型，或马尔科夫随机场。
+求解马尔科夫模型：将联合概率进行因式分解。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> 概率无向图的因式分解</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+定义团和最大团
+概率无向图的因式分解：将无向图模型的概率分布表示为最大团上的随机变量函数的乘积形式
+给定无向图概率模型，设其无向图为G，C为G上的最大团，<img src="ltxpng/2017-2-27-条件随机场_aedbe5025249c503d9de7d67fbdd56f4a99a2d86.png" alt="$Y_C$"> 表示C对应的随机变量。那么概率无向图模型的联合概率分布P(Y)可写作图中所有最大团C上的函数 <img src="ltxpng/2017-2-27-条件随机场_936d646c56bcdd3defb361229f4d43ecd3655074.png" alt="$\Psi_C(Y_C)$"> 的乘积形式，即
+<img src="ltxpng/2017-2-27-条件随机场_15e5d1e61ca59e0cd50ae6672d1aecf18021666d.png" alt="$$P(Y) = \frac{1}{Z} \prod_C \Psi_C(Y_C)$$"> 
+其中， Z是规范化因子，由式
+<img src="ltxpng/2017-2-27-条件随机场_d5ac082dc711ef4caeb7ac629e9284f571acec68.png" alt="$$Z = \sum_Y\prod_C \Psi_C(Y_C)$$"> 
+给出。保证P(Y)构成一个概率分布。函数 <img src="ltxpng/2017-2-27-条件随机场_936d646c56bcdd3defb361229f4d43ecd3655074.png" alt="$\Psi_C(Y_C)$"> 称为势函数，要求势函数严格为正。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 条件随机场的定义和形式</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> 条件随机场的定义</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+条件随机场（CRF）是给定随机变量X的条件下，随机变量Y的马尔科夫随机场。
+线性链条件随机场： 用于标注等问题
+   条件概率模型P(Y|X)，Y是输出变量（状态序列）， X是输入变量（观测序列）。学习时，通过（正则化）极大似然估计得到条件概率P(Y|X)。预测时，对于给定的输入序列x,求出条件概率 <img src="ltxpng/2017-2-27-条件随机场_7da9140b7f5f390b598dce6315857ac783c6d641.png" alt="$\hat P(y|x)$"> 最大的输出序列 <img src="ltxpng/2017-2-27-条件随机场_65aa66e18f048bb9084273cb5e4039addfa55959.png" alt="$\hat y$"> .
+   条件随机场的定义
+   设X与Y是随机变量，P(Y|X)是在给定X的条件下Y的条件概率分布，若随机变量Y构成一个由无向图G=(V,E)表示的马尔科夫随机场，则称条件概率分布P(Y|X)为条件随机场。
+   定义中未要求X和Y有相同的结构，现实中一般假设有相同的图结构。
+</p>
+
+<p>
+线性链条件随机场的定义
+设 <img src="ltxpng/2017-2-27-条件随机场_dbf7c5a9c9da79ddf03fdf327b3271b8df5ebc59.png" alt="$X=(X_1,X_2,...,X_n)$"> ， <img src="ltxpng/2017-2-27-条件随机场_e23df90738529411d1cc9e653355752e6631ed1f.png" alt="$Y= (Y_1,Y_2,...,Y_n)$"> 均为线性链表示的条件随机序列，若给定条件随机序列X的条件下，随机变量序列Y的条件分布序列 <img src="ltxpng/2017-2-27-条件随机场_2eb457de3ab08e9bb3c71d0f20869d95ff488fce.png" alt="$P(Y|X)$"> 构成条件随机场，即满足马尔可夫性，则称P(Y|X)为线性链条件随机场。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> 条件随机场的参数化形式</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+设P(Y|X)为线性链条件随机场，则在随机变量X取值为x的条件下，随机变量Y取值为y的条件概率具有如下形式：
+<img src="ltxpng/2017-2-27-条件随机场_ec551ee7948ad8b349bf5dbfb50efd70b933f0a3.png" alt="$$ P(y|x) = \frac{1}{Z(x)}exp(\sum_{i,k} \lambda_kt_k(y_{i-1}, y_i, x, i) + \sum_{i,l}\mu_ls_l(y_i,x,i) )$$"> 
+其中，
+<img src="ltxpng/2017-2-27-条件随机场_1dde679d8ade7f664e2dcea3c1cda65277a231b2.png" alt="$$Z(x) = \sum_y exp(\sum_{i,k}\lambda_kt_k(y_{i-1}, y_i, x, i)+\sum_{i,l}\mu_ls_l(y_i, x, i))$$">
+<img src="ltxpng/2017-2-27-条件随机场_c12fc515ba13c69fa2a5b625de4decabda717d0c.png" alt="$t_k$"> 为转移特征，  <img src="ltxpng/2017-2-27-条件随机场_7b5b7cdc5b797514607b0dde9437753b4f628365.png" alt="$s_l$"> 为状态特征，取值为0或者1； <img src="ltxpng/2017-2-27-条件随机场_cf63ea7ee580b225ca2483a7bcdbbf8d25e43cef.png" alt="$\lambda_k, \mu_l$"> 为对应的权值。
+例11.1    1+ 0.2 + 1 + 0.5 + 0.5 = 3.2
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> 条件随机场的简化形式</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+同一特征在各个位置都有定义，对同一特征在各个位置求和，将局部特征函数转化成一个全局特征函数，将条件随机场写成权值向量和特征向量的内积形式。
+先将转移特征和状态特征用统一的符号 <img src="ltxpng/2017-2-27-条件随机场_e474ee8200c4ea770065fe1ee3b9806bcbd69f64.png" alt="$f_k(y_{i-1}, y_i, x, i)$"> 表示。
+然后，对转移和状态特征在各个位置上求和。
+接着用统一的符号 <img src="ltxpng/2017-2-27-条件随机场_ea94f119fdf19f5c3999d47248a4038f0de4b435.png" alt="$w_k$"> 表示特征 <img src="ltxpng/2017-2-27-条件随机场_ad8fdf204779558065c75e5366de3f9c21ed579a.png" alt="$f_k(y,x)$"> 的权值。
+于是，条件随机场可以表示为：
+<img src="ltxpng/2017-2-27-条件随机场_a52f201aec3364dc11c02ca6f4cf302e1861d4cb.png" alt="$$P(y|x) = \frac{1}{Z(x)} exp \sum_{k=1}^K w_kf_k(y,x)$$">
+<img src="ltxpng/2017-2-27-条件随机场_06c9b3ef43e39e10dbd116d49cd3fa00d0b58061.png" alt="$$Z(x) = \sum_y exp \sum_{k=1}^K w_k f_k(y,x)$$">
+若以向量表示为：
+<img src="ltxpng/2017-2-27-条件随机场_ad7b0edb2ac8826b900190d9b6d9d80d95eea833.png" alt="$$P_{\vec w}(y|x) = \frac{exp(\vec w \cdot \vec F(y,x))} {Z_{\vec w}(x) = \sum_y exp(\vec w \cdot \vec F (y,x))} $$">
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> 条件随机场的矩阵形式</h3>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 条件随机场的概率计算问题</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+给定条件随机场P(Y|X),输入序列x和输出序列y,计算条件概率 <img src="ltxpng/2017-2-27-条件随机场_740b64d128556072e9e51d0559cea531cc43e328.png" alt="$P(Y_i = y_i |x), P(Y_{i-1} = y_{i-1}, Y_i = y_i |x)$"> 以及相应的数学期望的问题。
+</p>
+</div>
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 前向-后向算法</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+定义前向变量 <img src="ltxpng/2017-2-27-条件随机场_9edf117f32ad0a94757437eacefd543aa20724ae.png" alt="$\alpha_i(x)$"> , <img src="ltxpng/2017-2-27-条件随机场_49624fa3092f5c7f09072fed295244cb39c0c632.png" alt="$\alpha_i(y_i|x)$"> 表示在位置i的标记是 <img src="ltxpng/2017-2-27-条件随机场_94ce246c24ee7ca01b6a3f5eb35df7f251e3e668.png" alt="$y_i$"> 并且到位置i 的前部分标记序列的非规范化概率。 <img src="ltxpng/2017-2-27-条件随机场_94ce246c24ee7ca01b6a3f5eb35df7f251e3e668.png" alt="$y_i$"> 可取m个， <img src="ltxpng/2017-2-27-条件随机场_9edf117f32ad0a94757437eacefd543aa20724ae.png" alt="$\alpha_i(x)$"> 是m维向量。
+定义后向变量 <img src="ltxpng/2017-2-27-条件随机场_05d06fc0a3a3ce1b55951c4bafe2da34163da95b.png" alt="$\beta_i(x)$"> , <img src="ltxpng/2017-2-27-条件随机场_de0d9af888d596552bd6e4dccf9c1123c59362a1.png" alt="$\beta_i(y_i |x)$"> 表示在位置i的标记为 <img src="ltxpng/2017-2-27-条件随机场_94ce246c24ee7ca01b6a3f5eb35df7f251e3e668.png" alt="$y_i$"> 并且从 i+1 到 n的后部分标记序列的非规范化概率。
+</p>
+
+<p>
+可得：
+<img src="ltxpng/2017-2-27-条件随机场_8561759a3c0cf9c2ca683febd34f098afd12fe51.png" alt="$$Z(x) = \vec\alpha_n^T(x) \cdot \vec1 = \vec1^T \cdot \vec \beta_1(x)$$">
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> 概率计算</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+<img src="ltxpng/2017-2-27-条件随机场_d59641d0634a3a9d043a88c375bc201b73cee76e.png" alt="$$P(Y_i = y_i |x) =  \frac{\vec \alpha_i^T(y_i|x)\vec\beta_i(y_i|x)}{Z(x)}$$">
+  <img src="ltxpng/2017-2-27-条件随机场_5130f3919a62570ea968d6aa4b700339933567b0.png" alt="$$P(Y_{i-1} = y_{i-1}, Y_i = y_i |x) =  \frac{\vec \alpha_{i-1}^T(y_{i-1}|x)M_i(y_{i-1}, y_i|x
+)\vec\beta_i(y_i|x)}{Z(x)}$$">
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> 期望值计算</h3>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 条件随机场的学习算法</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+模型：定义在时序数据上的对数线性模型
+学习方法：（正则化的）极大似然估计
+</p>
+</div>
+<div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> 改进的迭代尺度法</h3>
+</div>
+
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> 拟牛顿法</h3>
+</div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> 条件随机场的预测算法</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+维特比算法
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2017-02-27 周一 04:00</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
