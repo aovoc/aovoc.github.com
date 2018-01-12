@@ -6,6 +6,7 @@ tags : [GAN, DL]
 ---
 
 nvidia 使用GAN生成高清晰图像论文：
+
 PROGRESSIVE GROWING OF GANS FOR IMPROVED QUALITY, STABILITY, AND VARIATION
 
 github地址：https://github.com/tkarras/progressive_growing_of_gans
