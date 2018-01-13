@@ -1,6 +1,6 @@
 ---
 layout: post
-category : Effective c++
+category : c++
 tagline: ""
 tags : [c++]
 ---

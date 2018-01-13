@@ -1,8 +1,8 @@
 ---
 layout: post
-category : dl
+category : sequence learning
 tagline: ""
-tags : [deep learning]
+tags : [sequence learning, deep learning]
 ---
 
 
