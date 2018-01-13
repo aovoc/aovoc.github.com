@@ -35,6 +35,7 @@ github: https://github.com/yunjey/StarGAN
 <img src="/assets/pics/stargan-lv.JPG" alt="StarGAN属性标签"/>
 
 ### 第一行示意图    
+
 在CelebA数据集上进行训练，CelebA label中有属性，RaFD属性全部无关，置为0，Mask Vector CelebA置1。    
 
 生成器将性别女棕色头发的人像转换到性别男黑色头发的目标域，对生成的图像再进行重建得到原来领域的生成图像。     
@@ -42,6 +43,7 @@ github: https://github.com/yunjey/StarGAN
 判别器用真实的数据进行训练，只对已知的属性（由mask vector标识）进行loss最小化，将生成的图像输入D判别真假。图中左侧图示的CelebA label书写错误，应为 10011。    
 
 ### 第二行示意图    
+
 第二行示意图是在RaFD数据集上，训练过程同在CelebA数据集上。
 
 ## 网络结构 
@@ -69,9 +71,11 @@ ComboGAN对CycleGAN进行改造，与StarGAN不同的是网络中生成器和判
 
 
 ## LOSS    
+
 与CycleGAN的loss相同。   
 
 ## 训练  
+
 从所有的领域中随机挑选两个领域进行训练，重复进行n次。    
 训练时间与转换领域个数呈线性关系。    
 
@@ -80,6 +84,7 @@ ComboGAN对CycleGAN进行改造，与StarGAN不同的是网络中生成器和判
 
 
 ComboGAN的网络结构如下：    
+
 <img src="/assets/pics/ComboGAN-network.JPG" alt="ComboGA网络结构"/>  
 
 
