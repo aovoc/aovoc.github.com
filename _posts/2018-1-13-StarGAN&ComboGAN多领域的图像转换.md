@@ -34,26 +34,26 @@ github: https://github.com/yunjey/StarGAN
 
 <img src="/assets/pics/stargan-lv.JPG" alt="StarGAN属性标签"/>
 
-### 第一行示意图    
+- 第一行示意图    
 
-在CelebA数据集上进行训练，CelebA label中有属性，RaFD属性全部无关，置为0，Mask Vector CelebA置1。    
+  在CelebA数据集上进行训练，CelebA label中有属性，RaFD属性全部无关，置为0，Mask Vector CelebA置1。    
 
-生成器将性别女棕色头发的人像转换到性别男黑色头发的目标域，对生成的图像再进行重建得到原来领域的生成图像。     
+  生成器将性别女棕色头发的人像转换到性别男黑色头发的目标域，对生成的图像再进行重建得到原来领域的生成图像。     
 
-判别器用真实的数据进行训练，只对已知的属性（由mask vector标识）进行loss最小化，将生成的图像输入D判别真假。图中左侧图示的CelebA label书写错误，应为 10011。    
+  判别器用真实的数据进行训练，只对已知的属性（由mask vector标识）进行loss最小化，将生成的图像输入D判别真假。图中左侧图示的CelebA label书写错误，应为 10011。    
 
-### 第二行示意图    
+- 第二行示意图    
 
-第二行示意图是在RaFD数据集上，训练过程同在CelebA数据集上。
+   第二行示意图是在RaFD数据集上，训练过程同在CelebA数据集上。
 
 ## 网络结构 
 
 stargan生成器结构如下：    
-<img src="/assets/pics/stargan-g-network.JPG" alt="StarGAN生成器结构"/>
+  <img src="/assets/pics/stargan-g-network.JPG" alt="StarGAN生成器结构"/>
 
 
 stargan生成器结构如下：    
-<img src="/assets/pics/stargan-d-network.JPG" alt="StarGAN判别器结构"/>
+ <img src="/assets/pics/stargan-d-network.JPG" alt="StarGAN判别器结构"/>
 
 
 # ComboGAN   
