@@ -1,89 +1,89 @@
-#+OPTIONS: tex:dvipng
+﻿#+OPTIONS: tex:dvipng
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="orgstyle.css"/>
- �߼�˹�ٻع��������ģ�Ͷ����ڶ�������ģ��
-* �߼�˹�ٻع�
-** �߼�˹�ٷֲ�
-** �����߼�˹�ٻع�ģ��
-    ���壺
+ 逻辑斯蒂回归与最大熵模型都属于对数线性模型
+* 逻辑斯蒂回归
+** 逻辑斯蒂分布
+** 二项逻辑斯蒂回归模型
+    定义：
     $$ P(y = 1| x) = \frac {exp(\vec w \cdot \vec x + b)} {1 + exp( \vec 
 w \cdot \vec x + b)}$$
     $$P(y=0|x) = \frac {1} {1 + exp(\vec w \cdot \vec x + b)}$$
-    �Ƚ������������ʵĴ�С����ʵ��x�ֵ���������ֵ�ϴ����һ�ࡣ
-    �������ʻ�logit�����ǣ�
+    比较两个条件概率的大小，将实例x分到条件概率值较大的那一类。
+    对数几率或logit函数是：
     $$logit(p) = log \frac {p}{1-p}$$
-    ��logistic regressionģ���У���� Y=1 �Ķ�������������x�����Ժ���
+    在logistic regression模型中，输出 Y=1 的对数几率是输入x的线性函数
     $$logit(P(Y=1|x)) = \vec w \cdot \vec x$$
 
 
-** ģ�Ͳ�������
-   Ӧ�ü�����Ȼ���Ʒ�����ģ�͵Ĳ���
-   ��: $P(Y=1|x) = \pi(x), P(Y=0|x) = 1 - \pi(x)$
-   ��Ȼ����Ϊ��
+** 模型参数估计
+   应用极大似然估计法估计模型的参数
+   设: $P(Y=1|x) = \pi(x), P(Y=0|x) = 1 - \pi(x)$
+   似然函数为：
    $$ \prod_{i=1}^N[\pi(x_i)]^{y_i}[1-\pi(x_i)]^{1-y_i}$$
-   ������Ȼ����Ϊ��
+   对数似然函数为：
    $$L(\vec w) = \sum_{i=1}^{N}[y_i(\vec w \cdot \vec {x_i}) -log(1+exp(\vec w \cdot \vec {x_i}))]$$
-   �Զ�����Ȼ�����󼫴�ֵ���õ� $\vec w$ �Ĺ���ֵ��
-   �������Զ�����Ȼ����ΪĿ�꺯�������Ż����⡣
-   ͨ�������ݶ��½�������ţ�ٷ���
+   对对数似然函数求极大值，得到 $\vec w$ 的估计值。
+   问题变成以对数似然函数为目标函数的最优化问题。
+   通常采用梯度下降法和拟牛顿法。
 
-** ����logistic regression
+** 多项logistic regression
    
-* �����ģ��
-  ��������Ƶ�ʵ��
-** �����ԭ��
-   ������ɢ�������X�ĸ��ʷֲ�ΪP(X)��������Ϊ��
+* 最大熵模型
+  由最大熵推导实现
+** 最大熵原理
+   假设离散随机变量X的概率分布为P(X)，则其熵为：
    $$H(P)= - \sum_xP(x)logP(x)$$ 
-   ������ģ��Ϊ��õ�ģ�͡�
-   �����ԭ��ͨ���ص��������ʾ�ȿ����ԡ�
-** �����ģ�͵Ķ���
-   ���ڸ���������X,����������P(Y|X)���Y��
-   ѧϰ��Ŀ��:�������ԭ��ѡ����õķ���ģ�͡�
-   �����ģ��
-     �������������ʷֲ�P(Y|X)�ϵ�������Ϊ��
+   熵最大的模型为最好的模型。
+   最大熵原理通过熵的最大化来表示等可能性。
+** 最大熵模型的定义
+   对于给定的输入X,以条件概率P(Y|X)输出Y。
+   学习的目标:用最大熵原理选择最好的分类模型。
+   最大熵模型
+     定义在条件概率分布P(Y|X)上的条件熵为：
        $$H(P) = -\sum_{x,y}P(x)P(y|x)log(y|x) $$ 
-   ����������Լ��������ģ�ͼ���ΪC��������H(P)����ģ�ͳ�Ϊ�����ģ�͡�
+   则满足所有约束条件的模型集合为C中条件熵H(P)最大的模型称为最大熵模型。
 
-** �����ģ�͵�ѧϰ
-   ��ʽ��ΪԼ�����Ż����⣬��Լ�����Ż�����ת��Ϊ��Լ�����Ż��Ķ�ż���⣬ͨ�����ż�������ԭ���⡣
-   �����ģ�ͣ�
+** 最大熵模型的学习
+   形式化为约束最优化问题，将约束最优化问题转换为无约束最优化的对偶问题，通过解对偶问题求解原问题。
+   最大熵模型：
    $$P_w(y|x) = \frac{1}{Z_w(x)} exp(\sum_{i=1}^nw_if_i(x,y))$$
-   ���У�
+   其中，
    $$Z_w(x) = \sum_yexp(\sum_{i=1}^nw_if_i(x,y))$$
-   ��������Ϊ $f_i(x,y)$ �� $Z_{\vec w}(x)$ ��Ϊ�淶�����ӣ� nΪ���������ĸ����� $w_i$ Ϊ������Ȩֵ��
-** ������Ȼ����
-   ֤���������ģ��ѧϰ�еĶ�ż�����ļ��󻯵ȼ��������ģ�͵ļ�����Ȼ����
-   �����ģ�͵�һ����ʽ
+   特征函数为 $f_i(x,y)$ ， $Z_{\vec w}(x)$ 称为规范化因子， n为特征函数的个数， $w_i$ 为特征的权值。
+** 极大似然估计
+   证明了最大熵模型学习中的对偶函数的极大化等价于最大熵模型的极大似然估计
+   最大熵模型的一般形式
      $$P_w(y|x) = \frac1{Z_w(x)}exp(\sum_{i=1}^n w_i f_i(x,y))$$
-   ����
+   其中
      $$ Z_w(x) = \sum_yexp(\sum_{i=1}^nw_if_i(x,y)) $$
-     ���� $\vec x\in R^n$ Ϊ���룬 $y\in{1,2,...,K}$ Ϊ����� $\vec w \in R^n$ ΪȨֵ������$f_i(x,y), i=1,2,...,n$ Ϊ����ʵֵ����������
+     这里 $\vec x\in R^n$ 为输入， $y\in{1,2,...,K}$ 为输出， $\vec w \in R^n$ 为权值向量，$f_i(x,y), i=1,2,...,n$ 为任意实值特征函数。
 
-* ģ��ѧϰ�����Ż��㷨
-  logistic regression�������ģ��ѧϰ���Ϊ����Ȼ����ΪĿ�꺯�������Ż����⣬ͨ��ͨ����������⡣�ܱ�֤�ҵ�ȫ�����Ž⣬ţ�ٷ�����ţ�ٷ������ٶȿ졣
+* 模型学习的最优化算法
+  logistic regression、最大熵模型学习归结为以似然函数为目标函数的最优化问题，通常通过迭代法求解。能保证找到全局最优解，牛顿法和拟牛顿法收敛速度快。
 
-** �Ľ��ĵ����߶ȷ�(IIS)
-   ��ǰ�Ĳ��������� $w$,�ҵ�һ���µĲ������� $w+\delta$,ʹ��ģ�͵Ķ�����Ȼ���������ظ���һ���̣�ֱ���ҵ�������Ȼ���������ֵ��
+** 改进的迭代尺度法(IIS)
+   当前的参数向量是 $w$,找到一个新的参数向量 $w+\delta$,使得模型的对数似然函数增大，重复这一过程，直至找到对数似然函数的最大值。
 
-** ��ţ�ٷ�
-    �����ģ�ͣ�
+** 拟牛顿法
+    最大熵模型：
     $$P_{\vec w}(y|x) = \frac{exp(\sum{{i=1}^nw_if_i(x,y)})}{\sum_yexp(\sum_{i=1}^nw_if_i(x,y))}$$
-    Ŀ�꺯��������󻯣���
+    目标函数（熵最大化）：
     $$min_{\vec w \in R^n} f(\vec 
 w) = ... $$
-    �ݶȣ�
+    梯度：
     $$g(\vec w) = (\frac {\partial f(\vec w)}{\partial w_1}, \frac {\partial f(\vec w)}{\partial w_2},...,\frac {\partial f(\vec w)}{\partial w_n})^T $$
 
-    �㷨��
-    (1)ѡ����ʼ�� $w^{(0)}$ ,ȡ $B_0$ Ϊ�����Գƾ�����k=0
-    (2)���� $g_k = g(w^{(k)})$ , �� $||g_k|| < \epsilon$ ,��ֹͣ���㣬 �� $w = w^{(k)}$ ; ����ת��(3)
-    (3)�� $B_kp_k = -g_k$ ��� $p_k$ ��
-    (4)һά�������� $\lambda_k$ ʹ��
+    算法：
+    (1)选定初始点 $w^{(0)}$ ,取 $B_0$ 为正定对称矩阵，置k=0
+    (2)计算 $g_k = g(w^{(k)})$ , 若 $||g_k|| < \epsilon$ ,则停止计算， 得 $w = w^{(k)}$ ; 否则转到(3)
+    (3)由 $B_kp_k = -g_k$ 求出 $p_k$ 。
+    (4)一维搜索：求 $\lambda_k$ 使得
     $$f(w^{(k)} + \lambda_kp_k) =
 \min_{\lambda \ge 0} f(w^{(k)} + \lambda p_k)$$
-    (5)�� $$w^{(k+1)} = w^{(k)} + \lambda_kp_k $$
-    (6)���� $$g_{k+1} = g({w^(k+1)}) $$ , �� $$||g_{k+1}|| < \epsilon$$ , ��ֹͣ����, �� $$w = w^{(k+1)}$$ ; ���� ����ʽ��� $$B_{k+1}$$ :
+    (5)置 $$w^{(k+1)} = w^{(k)} + \lambda_kp_k $$
+    (6)计算 $$g_{k+1} = g({w^(k+1)}) $$ , 若 $$||g_{k+1}|| < \epsilon$$ , 则停止计算, 得 $$w = w^{(k+1)}$$ ; 否则， 按下式求出 $$B_{k+1}$$ :
     $$B_{k+1} = B_k + \frac {y_ky_k^T}{y_k^T\lambda_k} - \frac{B_k\lambda_k\lambda_k^TB_k}{\lambda_k^TB_k\lambda_k
 }$$
-    ���У�
+    其中，
     $$y_k = g_{k+1} - g_k, \lambda_k = w^{(k+1)} - w^{(k)}$$
-    (7)�� k = k +1, ת(3).
+    (7)置 k = k +1, 转(3).
