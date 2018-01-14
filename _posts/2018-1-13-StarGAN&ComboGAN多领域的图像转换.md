@@ -69,6 +69,11 @@ ComboGAN与StarGAN相同，是要进行多领域的图像转换。
 
 ComboGAN对CycleGAN进行改造，与StarGAN不同的是网络中生成器和判别器不再共用一个网络，而是在各自的领域建立各自的Encoder、Decoder和Discriminator。根据要转换的图像域来进行Encoder和Decoder的组合。    
 
+ComboGAN的Encoder与不同的Decoder进行匹配转换的示意图如下：
+
+ <img src="/assets/pics/combogan-arch.PNG" alt="ComboGAN编码解码匹配"/>
+
+
 
 ## LOSS    
 
