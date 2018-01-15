@@ -58,9 +58,10 @@ stargan生成器结构如下：
 
 # ComboGAN   
 
+论文：  
 [ComboGAN: Unrestrained Scalability for Image Domain Translation](https://arxiv.org/pdf/1712.06909.pdf)    
 
-[ComboGAN](github: https://github.com/AAnoosheh/ComboGAN)    
+github 地址：[ComboGAN](github: https://github.com/AAnoosheh/ComboGAN)    
 
 
 ## 论文思想   
