@@ -7,22 +7,22 @@ tags : [GAN, DL]
 
 nvidia 使用GAN生成高清晰图像论文：
 
-     PROGRESSIVE GROWING OF GANS FOR IMPROVED QUALITY, STABILITY, AND VARIATION
+[PROGRESSIVE GROWING OF GANS FOR IMPROVED QUALITY, STABILITY, AND VARIATION](https://arxiv.org/pdf/1710.10196.pdf)
 
-github地址：https://github.com/tkarras/progressive_growing_of_gans
+github地址： [progressve_growing_of_gans](https://github.com/tkarras/progressive_growing_of_gans)
 
 # 贡献  
-- 提出新的训练的策略：对生成器和判别器从低分辨率开始，逐步地增长生成器和判别器的尺寸进行训练。
+1. 提出新的训练的策略：对生成器和判别器从低分辨率开始，逐步地增长生成器和判别器的尺寸进行训练。
 
-- 提出生成多样化图像的简单方法。
+2. 提出生成多样化图像的简单方法。
 
-- 提出了一些减弱生成器和判别器不正当竞争的的实现细节。
+3. 提出了一些减弱生成器和判别器不正当竞争的的实现细节。
 
 
-- 提出gan图像生成的评判标准。
+4.  提出gan图像生成的评判标准。
 
 # Loss   
-    WGAN-GP loss
+[WGAN-GP loss](https://baijiahao.baidu.com/s?id=1569977751436387&wfr=spider&for=pc)
 
 # 贡献点详解     
 ## 1.逐步增长的训练策略    
@@ -37,9 +37,9 @@ github地址：https://github.com/tkarras/progressive_growing_of_gans
 相邻层尺寸放大及缩小一倍使用的方法：最近邻插值和平均池化
 
 ### 优点   
-- 在生成高分辨率的图像的过程中保持训练的稳定性
+1. 在生成高分辨率的图像的过程中保持训练的稳定性
 
-- 减少训练的时间
+2. 减少训练的时间
 
 分辨率转换的过程如下：
 
@@ -62,11 +62,11 @@ GAN有只能捕捉到训练数据的一小部分子集的变化的特性
 
 简化方案：
 
-- 对每个特征在每个空间位置计算小批量数据的标准差
+1. 对每个特征在每个空间位置计算小批量数据的标准差
 
-- 对所有的特征和所有的空间位置的第一步得到的计算值进行求平均得到一个值。
+2. 对所有的特征和所有的空间位置的第一步得到的计算值进行求平均得到一个值。
 
-- 在每个空间位置将值进行重复得到一个常量值的特征层并将它连接到所有的特征空间上
+3. 在每个空间位置将值进行重复得到一个常量值的特征层并将它连接到所有的特征空间上
 
 
 此外，通过实验发现将特征层放在最后一层能得到最好的效果。
