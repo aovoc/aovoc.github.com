@@ -10,9 +10,9 @@ tags : [GAN, DL]
 # StarGAN    
 
 论文：    
-StarGAN: Unified Generative Adversarial Networks for Multi-Domain Image-to-Image Translation    
+[StarGAN: Unified Generative Adversarial Networks for Multi-Domain Image-to-Image Translation](https://arxiv.org/pdf/1711.09020.pdf)    
 
-github: https://github.com/yunjey/StarGAN   
+github: [StarGAN](https://github.com/yunjey/StarGAN)   
 
 ## 论文思想   
 
@@ -58,9 +58,9 @@ stargan生成器结构如下：
 
 # ComboGAN   
 
-ComboGAN: Unrestrained Scalability for Image Domain Translation    
+[ComboGAN: Unrestrained Scalability for Image Domain Translation](https://arxiv.org/pdf/1712.06909.pdf)    
 
-github: https://github.com/AAnoosheh/ComboGAN    
+[ComboGAN](github: https://github.com/AAnoosheh/ComboGAN)    
 
 
 ## 论文思想   
