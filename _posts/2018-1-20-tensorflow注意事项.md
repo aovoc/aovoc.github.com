@@ -18,3 +18,6 @@ tags : [tensorflow]
 
 # sess.run()
 **每次执行sess.run()之后batch会更新，debug找了好久... T T**
+
+[Tensorflow mixes up images and labels when making batch
+](https://stackoverflow.com/questions/41864333/tensorflow-mixes-up-images-and-labels-when-making-batch)
