@@ -1,0 +1,20 @@
+﻿#+OPTIONS: tex:dvipng
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="orgstyle.css"/>
+
+* 牛顿法
+  将f(x) 在 $x^{(k)}$ 处附近进行二阶泰勒展开，并令其一阶导数为0，求的 $x^{(k+1)}$ 
+* 拟牛顿法的思路
+  在牛顿法的迭代过程中，需要计算海塞矩阵的逆矩阵，计算复杂，考虑用n阶矩阵来近似替代。
+  每次迭代选择更新矩阵 $G_{k+1}$：
+  $$ G_{k+1} = G_{K} + \Delta 
+  G_{k} $$
+* DFP算法
+  $$G_{k+1} = G_k + \frac {\delta_k\delta_k^T}{\delta_k^Ty_k} - \frac{G_ky_ky_k^TG_k}{y_k^TG_ky_k} $$
+  可以证明，若初始矩阵 $G_0$ 是正定的，则在迭代过程中的每个矩阵 $G_k$ 都是正定的。
+
+* BFGS算法
+  最流行的拟牛顿算法
+  $$ B_{k+1} = B_k + \frac{y_ky_k^T}{y_k^T\delta_k} - \frac{B_k\delta_k\delta_k^TB_k}{\delta_k^TB_k\delta_k} $$
+  可以证明，若初始矩阵 $B_0$ 是正定大的，则迭代过程中的每个矩阵 $B_k$ 都是正定的。
+  
+* Broyden算法
