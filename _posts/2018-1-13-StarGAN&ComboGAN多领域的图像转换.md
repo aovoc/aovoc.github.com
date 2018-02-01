@@ -20,7 +20,7 @@ github: [StarGAN](https://github.com/yunjey/StarGAN)
 
 ## LOSS
 
-loss 包含三项, 对抗loss, 类别loss, 重建loss.   
+Loss 包含三项, 对抗loss, 类别loss, 重建loss.   
 
 ### 对抗 loss   
 
@@ -48,6 +48,14 @@ loss 包含三项, 对抗loss, 类别loss, 重建loss.
 适用循环一致性损失函数， Loss公式如下：
 
 <img src="/assets/pics/stargan-loss3.JPG" alt="StarGAN 重建损失函数"/>
+
+
+### 总 loss   
+由以上 Loss， 可得生成器和判别器的 loss 公式分别如下：
+
+<img src="/assets/pics/stargan-loss4.JPG" alt="StarGAN 总损失函数"/>
+
+
 
 ## 多数据集训练
 
