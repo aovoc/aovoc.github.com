@@ -48,7 +48,9 @@ github:
 [ICGan-tensorflow](https://github.com/zhangqianhui/ICGan-tensorflow)
 
 ## 思路  
-将CGAN和Encoder 结合起来，对生成图像的随机变量的进行限制和选择。
+
+将CGAN和Encoder 结合起来，将源图像的特征向量分离改变后重新生成新图像。通过Encoder,将一幅真实的图像编码为潜在编码z和特征向量y,改变条件向量y中的特征位，重新生成源图像改变特征后得到的新图像。
+
 
 ## 结构   
 ICGAN的结构如下：
@@ -73,3 +75,15 @@ Encoder结构：
 ## loss  
 
 <img src="/assets/pics/icgan-loss1.PNG" alt="loss"/> 
+
+
+## 训练过程   
+
+IcGAN的训练包含3个步骤：   
+1. 训练cGAN    
+2. 用cGAN生成数据集A     
+3. 用数据集A训练编码器Ez,使Ez能够将图像解析成对应的潜在编码z  
+4. 用真实数据集训练生成器Z   
+
+
+
