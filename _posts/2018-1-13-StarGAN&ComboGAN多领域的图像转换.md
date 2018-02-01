@@ -19,17 +19,40 @@ github: [StarGAN](https://github.com/yunjey/StarGAN)
 通过使用属性向量（one-hot）标签来进行多领域的图像转换，训练过程中随机选择一个目标域进行转换。网络只使用一个生成器和一个判别器。实验结果能够比基准模型DIAT、IcGAN、CycleGAN等有更好的生成效果。   
 
 ## LOSS
+
+loss 包含三项, 对抗loss, 类别loss, 重建loss.   
+
+### 对抗 loss   
+
 带梯度惩罚的Wasserstein GAN loss, 公式如下：    
 
 <img src="/assets/pics/stargan-loss.JPG" alt="StarGAN损失函数"/>
 
 其中， \lamda_{gp} = 10    
 
+### 类别 loss  
+
+用真实图像来优化判别器，用生成图像来优化生成器。  
+
+用真实图像来优化判别器， Loss公式如下：
+
+<img src="/assets/pics/stargan-loss1.JPG" alt="StarGAN 类别损失函数"/>
+
+用生成图像来优化生成器， Loss公式如下：
+
+<img src="/assets/pics/stargan-loss2.JPG" alt="StarGAN 类别损失函数2"/>
+
+
+### 重建 loss
+
+适用循环一致性损失函数， Loss公式如下：
+
+<img src="/assets/pics/stargan-loss3.JPG" alt="StarGAN 重建损失函数"/>
 
 ## 多数据集训练
 
 向量标签的组成由CelebA数据集的属性和RaFD数据集的属性及数据集标签组成，是一个二维的one-hot编码。   
-将属性向量标签用作控制信息，并未添加到输入的数据中。     
+在训练未开始前将属性向量标签信息连接到输入图像上作为输入数据。     
 具体的标签属性排列及训练过程如下图：   
 
 <img src="/assets/pics/stargan-lv.JPG" alt="StarGAN属性标签"/>
